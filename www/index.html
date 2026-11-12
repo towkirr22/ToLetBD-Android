@@ -154,6 +154,22 @@
           .home-property-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
           .home-filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
         }
+
+/* To-Let BD premium Android layer */
+:root{--tl-primary:#087b6d;--tl-deep:#064e45;--tl-gold:#e7b64d;--tl-ink:#17352d;--tl-surface:#f4f8f6}
+body{background:var(--tl-surface);-webkit-tap-highlight-color:transparent}
+button,a,input,select,textarea{-webkit-tap-highlight-color:transparent}
+.home-property-card{border-radius:22px;box-shadow:0 8px 24px rgba(9,54,42,.08);border-color:#e2eee8}
+.home-property-image{overflow:hidden}.home-property-image img{transition:transform .35s ease}.home-property-card:active .home-property-image img{transform:scale(1.035)}
+.home-property-fav{display:grid;place-items:center;box-shadow:0 3px 12px #102d241f;z-index:3}.home-property-fav.is-fav{background:#fff0f0;color:#dc3545}
+.tl-share-card{position:absolute;right:55px;top:12px;width:37px;height:37px;border:0;border-radius:50%;background:#ffffffed;color:#087b6d;font-size:14px;display:grid;place-items:center;box-shadow:0 3px 12px #102d241f;z-index:3}
+.tl-premium-banner{background:linear-gradient(135deg,#073f37 0%,#087b6d 58%,#15947f 100%);color:#fff;border-radius:22px;padding:19px;box-shadow:0 12px 28px #075e5424;position:relative;overflow:hidden}
+.tl-premium-banner:after{content:"";position:absolute;width:180px;height:180px;border:1px solid #ffffff22;border-radius:50%;right:-60px;top:-85px;box-shadow:0 0 0 22px #ffffff0b,0 0 0 44px #ffffff08}
+.tl-fav-empty{border:1px dashed #bfd7cd;background:#fff;border-radius:20px;padding:42px 18px;text-align:center;color:#70847b}
+.tl-toast{position:fixed;left:50%;bottom:calc(86px + env(safe-area-inset-bottom));transform:translate(-50%,14px);opacity:0;pointer-events:none;background:#123d34;color:#fff;padding:10px 16px;border-radius:999px;font-size:13px;font-weight:700;z-index:9999;box-shadow:0 8px 25px #0003;transition:.22s;max-width:90vw;text-align:center}.tl-toast.show{opacity:1;transform:translate(-50%,0)}
+.mobile-bottom-nav{grid-template-columns:repeat(5,minmax(0,1fr))!important}.mobile-bottom-nav button.active,.mobile-bottom-nav button.active i{color:#087b6d}
+@media(max-width:560px){.tl-premium-banner{padding:16px;border-radius:18px}.home-property-card{border-radius:17px}.mobile-bottom-nav button{font-size:9px!important}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 </style>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -221,10 +237,11 @@
 
     <!-- Mobile bottom navigation -->
     <nav class="mobile-bottom-nav" aria-label="মোবাইল নেভিগেশন">
-      <button type="button" onclick="navigateHome(event)"><i class="fa-solid fa-house"></i><span>হোম</span></button>
-      <button type="button" onclick="switchTab('listings')"><i class="fa-solid fa-building"></i><span>বাসা খুঁজুন</span></button>
-      <button type="button" onclick="switchTab('post-ad')"><i class="fa-solid fa-circle-plus"></i><span>বিজ্ঞাপন দিন</span></button>
-      <button type="button" onclick="openOwnerAuth()"><i class="fa-solid fa-user"></i><span>অ্যাকাউন্ট</span></button>
+      <button type="button" data-tl-tab="home" onclick="navigateHome(event)"><i class="fa-solid fa-house"></i><span>হোম</span></button>
+      <button type="button" data-tl-tab="listings" onclick="switchTab('listings')"><i class="fa-solid fa-building"></i><span>বাসা খুঁজুন</span></button>
+      <button type="button" data-tl-tab="favorites" onclick="switchTab('favorites')"><i class="fa-solid fa-heart"></i><span>পছন্দ</span></button>
+      <button type="button" data-tl-tab="post-ad" onclick="switchTab('post-ad')"><i class="fa-solid fa-circle-plus"></i><span>বিজ্ঞাপন দিন</span></button>
+      <button type="button" data-tl-tab="account" onclick="openOwnerAuth()"><i class="fa-solid fa-user"></i><span>অ্যাকাউন্ট</span></button>
     </nav>
 
     <!-- CONTENT SECTIONS (SPA Navigation Container) -->
@@ -321,6 +338,15 @@
             </div>
         </section>
 
+
+        <section id="tab-favorites" class="tab-page hidden py-6">
+          <div class="container mx-auto px-4 max-w-6xl space-y-5">
+            <div class="tl-premium-banner"><div class="relative z-10"><div class="text-xs font-bold tracking-widest text-emerald-100">TO-LET BD · YOUR SHORTLIST</div><h2 class="text-2xl font-extrabold mt-1">আপনার পছন্দের বাসা</h2><p class="text-sm text-emerald-50 mt-1">যে বিজ্ঞাপনগুলো পরে দেখতে চান, এখানে সেগুলো সংরক্ষিত থাকবে।</p></div></div>
+            <div class="flex items-center justify-between gap-3"><div><div class="text-xs text-slate-500">সংরক্ষিত বিজ্ঞাপন</div><div id="tl-fav-count" class="text-xl font-extrabold text-slate-800">০টি</div></div><button type="button" onclick="clearAllFavorites()" class="rounded-xl border border-rose-200 bg-white px-3 py-2 text-sm font-bold text-rose-600">সব মুছুন</button></div>
+            <div id="tl-favorites-grid" class="home-property-grid"></div>
+            <div id="tl-favorites-empty" class="tl-fav-empty"><div class="text-4xl text-rose-300 mb-3"><i class="fa-regular fa-heart"></i></div><h3 class="text-lg font-extrabold text-slate-700">এখনো কোনো বাসা সংরক্ষণ করেননি</h3><p class="text-sm mt-1">পছন্দের বিজ্ঞাপনের হার্ট আইকনে চাপ দিলে এখানে পাবেন।</p><button type="button" onclick="switchTab('listings')" class="mt-4 rounded-xl bg-emerald-700 px-5 py-2.5 text-white font-bold">বাসা খুঁজুন</button></div>
+          </div>
+        </section>
 
         <!-- Standalone owner identity verification page -->
         <section id="tab-owner-verification" class="tab-page hidden py-8">
@@ -1056,7 +1082,8 @@
                   <img src="${prop.image}" alt="${prop.title}" loading="lazy">
                   <span class="home-property-tag">${catNames[prop.category] || prop.category}</span>
                   ${prop.verified ? '<span class="home-property-tag" style="left:auto;right:54px;background:#e8f1ff;color:#2454a6">✓ Verified</span>' : ''}
-                  <button class="home-property-fav" aria-label="পছন্দের তালিকায় যোগ করুন" onclick="event.stopPropagation();this.classList.toggle('is-fav');this.innerHTML=this.classList.contains('is-fav')?'♥':'♡'">♡</button>
+                  <button class="tl-share-card" type="button" aria-label="বিজ্ঞাপন শেয়ার করুন" onclick="event.stopPropagation();shareProperty(${JSON.stringify(String(prop.id))})"><i class="fa-solid fa-share-nodes"></i></button>
+                  <button class="home-property-fav" data-fav-id="${String(prop.id)}" aria-label="পছন্দের তালিকায় যোগ করুন" onclick="event.stopPropagation();toggleFavorite(${JSON.stringify(String(prop.id))})"></button>
                 </div>
                 <div class="home-property-body">
                   <h3 class="home-property-title">${prop.title}</h3>
@@ -1684,6 +1711,23 @@
           });
         };
 
+
+        // Premium app features: saved favourites, share sheet, native back handling.
+        const TL_FAV_KEY='toletbd_favorites_v1';
+        function getFavoriteIds(){try{return JSON.parse(localStorage.getItem(TL_FAV_KEY)||'[]').map(String)}catch(e){return []}}
+        function saveFavoriteIds(ids){localStorage.setItem(TL_FAV_KEY,JSON.stringify([...new Set(ids.map(String))]));updateFavoriteButtons();renderFavoritesPage()}
+        function tlToast(message){let el=document.getElementById('tl-app-toast');if(!el){el=document.createElement('div');el.id='tl-app-toast';el.className='tl-toast';document.body.appendChild(el)}el.textContent=message;el.classList.add('show');clearTimeout(window.__tlToastTimer);window.__tlToastTimer=setTimeout(()=>el.classList.remove('show'),2100)}
+        function toggleFavorite(id){const key=String(id),ids=getFavoriteIds(),exists=ids.includes(key);saveFavoriteIds(exists?ids.filter(x=>x!==key):[...ids,key]);tlToast(exists?'পছন্দের তালিকা থেকে সরানো হয়েছে':'পছন্দের তালিকায় সংরক্ষণ হয়েছে')}
+        function updateFavoriteButtons(){const ids=getFavoriteIds();document.querySelectorAll('[data-fav-id]').forEach(btn=>{const yes=ids.includes(String(btn.dataset.favId));btn.classList.toggle('is-fav',yes);btn.innerHTML=yes?'♥':'♡';btn.setAttribute('aria-label',yes?'পছন্দের তালিকা থেকে সরান':'পছন্দের তালিকায় যোগ করুন');btn.setAttribute('aria-pressed',String(yes))})}
+        function renderFavoritesPage(){const grid=document.getElementById('tl-favorites-grid'),empty=document.getElementById('tl-favorites-empty'),count=document.getElementById('tl-fav-count');if(!grid)return;const ids=getFavoriteIds(),saved=ids.map(id=>properties.find(p=>String(p.id)===id)).filter(Boolean).filter(p=>p.status==='approved');grid.innerHTML=saved.map(p=>createPropertyCardHTML(p)).join('');if(count)count.textContent=saved.length.toLocaleString('bn-BD')+'টি';if(empty)empty.classList.toggle('hidden',saved.length>0);grid.classList.toggle('hidden',saved.length===0);updateFavoriteButtons()}
+        function clearAllFavorites(){if(!getFavoriteIds().length)return;if(!confirm('সব সংরক্ষিত বিজ্ঞাপন মুছে ফেলবেন?'))return;saveFavoriteIds([]);tlToast('পছন্দের তালিকা খালি করা হয়েছে')}
+        async function shareProperty(id){const p=properties.find(x=>String(x.id)===String(id));if(!p)return;const url=location.origin+location.pathname+'?property='+encodeURIComponent(id),data={title:p.title||'To-Let BD',text:(p.title||'ভাড়ার বিজ্ঞাপন')+' · '+(p.location||'')+' · ৳'+Number(p.price||0).toLocaleString('bn-BD'),url};try{if(navigator.share)await navigator.share(data);else if(navigator.clipboard){await navigator.clipboard.writeText(data.text+'\n'+url);tlToast('বিজ্ঞাপনের লিংক কপি হয়েছে')}else tlToast('এই ডিভাইসে Share সুবিধা পাওয়া যায়নি')}catch(e){if(e?.name!=='AbortError')tlToast('শেয়ার করা যায়নি')}}
+        const _tlSwitchTab=switchTab;switchTab=function(tabId){const result=_tlSwitchTab(tabId);document.querySelectorAll('.mobile-bottom-nav [data-tl-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tlTab===tabId));if(tabId==='favorites')renderFavoritesPage();return result};
+        const _tlRenderHomeProperties=renderHomeProperties;renderHomeProperties=function(){const r=_tlRenderHomeProperties();updateFavoriteButtons();return r};
+        const _tlRenderAllListingsPage=renderAllListingsPage;renderAllListingsPage=function(){const r=_tlRenderAllListingsPage();updateFavoriteButtons();return r};
+        const _tlFilterListingsPage=filterListingsPage;filterListingsPage=function(...args){const r=_tlFilterListingsPage(...args);updateFavoriteButtons();return r};
+        window.addEventListener('pageshow',()=>{updateFavoriteButtons();renderFavoritesPage()});
+        document.addEventListener('DOMContentLoaded',()=>{updateFavoriteButtons();renderFavoritesPage();try{const cap=window.Capacitor;if(cap?.isNativePlatform?.()){cap.Plugins?.StatusBar?.setStyle?.({style:'LIGHT'});cap.Plugins?.StatusBar?.setBackgroundColor?.({color:'#075E54'});cap.Plugins?.App?.addListener?.('backButton',({canGoBack})=>{const visible=[...document.querySelectorAll('.tab-page')].find(x=>!x.classList.contains('hidden'));if(visible?.id==='tab-property-details'||visible?.id==='tab-owner-property-edit')switchTab('listings');else if(visible?.id!=='tab-home')switchTab('home');else if(canGoBack)history.back()})}}catch(e){console.warn('Native bridge setup skipped',e)}});
 
         // Admin dashboard restored: access is gated by profiles.role === admin.
 
