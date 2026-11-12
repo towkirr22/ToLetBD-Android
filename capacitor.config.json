@@ -1,3 +1,4 @@
+
 {
   "appId": "com.orbithousebd.toletbd",
   "appName": "To-Let BD",
@@ -24,8 +25,9 @@
       "showSpinner": false
     },
     "StatusBar": {
-      "style": "DARK",
-      "backgroundColor": "#ffffff"
+      "style": "LIGHT",
+      "backgroundColor": "#075E54",
+      "overlaysWebView": false
     },
     "Geolocation": {
       "enableHighAccuracy": true,
