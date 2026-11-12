@@ -1,0 +1,22 @@
+{
+  "name": "tolet-bd-android",
+  "version": "1.0.0",
+  "private": true,
+  "description": "To-Let BD hybrid Android app powered by Capacitor",
+  "scripts": {
+    "sync:android": "cap sync android",
+    "open:android": "cap open android",
+    "build:android": "cd android && gradlew.bat assembleDebug"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.4.3",
+    "@capacitor/app": "^7.0.1",
+    "@capacitor/camera": "^7.0.1",
+    "@capacitor/core": "^7.4.3",
+    "@capacitor/geolocation": "^7.1.5",
+    "@capacitor/status-bar": "^7.0.1"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.4.3"
+  }
+}

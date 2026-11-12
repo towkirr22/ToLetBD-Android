@@ -1,0 +1,36 @@
+{
+  "appId": "com.orbithousebd.toletbd",
+  "appName": "To-Let BD",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https",
+    "allowNavigation": [
+      "to-let-bd-tau.vercel.app",
+      "*.supabase.co",
+      "*.google.com",
+      "*.googleapis.com",
+      "*.gstatic.com",
+      "*.openstreetmap.org",
+      "*.tile.openstreetmap.org",
+      "nominatim.openstreetmap.org",
+      "wa.me"
+    ]
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 1800,
+      "launchAutoHide": true,
+      "backgroundColor": "#ffffff",
+      "showSpinner": false
+    },
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#ffffff"
+    },
+    "Geolocation": {
+      "enableHighAccuracy": true,
+      "timeout": 20000,
+      "maximumAge": 0
+    }
+  }
+}
