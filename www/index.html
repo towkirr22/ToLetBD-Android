@@ -1,1 +1,1692 @@
+<!DOCTYPE html>
+<html lang="bn" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>টু-লেট BD | ডিজিটাল প্রপার্টি রেন্টাল ও ভেরিফাইড বাসা ভাড়া প্ল্যাটফর্ম</title>
 
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Hind Siliguri"', '"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        emerald: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                            950: '#022c22',
+                        },
+                        amber: {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Leaflet OpenStreetMap CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .leaflet-container {
+            z-index: 10 !important;
+            border-radius: 0.75rem;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+        }
+
+        /* Homepage visual system based on supplied reference; details view remains unchanged */
+        .rental-home{background:#f3f7f5;padding-bottom:48px;font-family:'Hind Siliguri','Plus Jakarta Sans',sans-serif}
+        .home-masthead{background:#11766d;color:#fff;padding:16px 18px 18px}
+        .home-masthead-inner{max-width:1120px;margin:auto}
+        .home-brand{display:flex;align-items:center;gap:10px}.home-brand-icon{width:42px;height:42px;border-radius:13px;background:#ffffff20;display:grid;place-items:center;font-size:27px}.home-brand b{display:block;font-size:22px;line-height:1.1}.home-brand small{display:block;font-size:11px;opacity:.82;margin-top:3px}.home-trust{background:#ffffff20;border:1px solid #ffffff35;border-radius:30px;padding:7px 12px;font-size:12px;white-space:nowrap}
+        .home-search{display:flex;align-items:center;gap:10px;background:#fff;border-radius:14px;padding:4px 7px 4px 14px;box-shadow:0 5px 16px #073e3925;color:#63736f}.home-search input{border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;padding:10px 0!important;min-width:0;color:#172b28!important;flex:1;font-size:15px}.home-search button{width:38px;height:38px;border-radius:11px;background:#0f766e;color:#fff}
+        .home-shell{max-width:1120px;margin:auto;padding:18px 18px 0}.category-scroll-wrap{position:relative}.home-type-tabs{display:flex;gap:9px;overflow-x:auto;padding:1px 0 13px;scrollbar-width:none;scroll-behavior:smooth;padding-right:44px}.category-more-cue{display:none;position:absolute;right:0;top:0;height:38px;min-width:104px;border:0;border-radius:22px 0 0 22px;background:linear-gradient(90deg,#f3f7f5 0%,#e1f2ec 38%,#d5eee5 100%);color:#086b5d;font-size:12px;font-weight:900;align-items:center;justify-content:flex-end;padding:0 7px 0 12px;cursor:pointer;z-index:3;box-shadow:-5px 0 10px #f3f7f5}.category-more-cue.visible{display:flex}.category-more-cue span{display:flex;align-items:center;gap:6px;white-space:nowrap}.category-more-cue b{font-size:23px;line-height:1;animation:categoryNudge 1.4s ease-in-out infinite}@keyframes categoryNudge{0%,100%{transform:translateX(0)}50%{transform:translateX(4px)}}.home-type-tabs::-webkit-scrollbar{display:none}.home-type{flex:none;border:1px solid #e1eae6;background:#fff;color:#334b44;border-radius:30px;padding:9px 16px;font-weight:700;font-size:14px;white-space:nowrap}.home-type.active{background:#11766d;color:#fff;border-color:#11766d}
+        .home-filter-panel{background:#fff;border:1px solid #e3ece8;border-radius:19px;padding:15px;box-shadow:0 7px 22px #143e3010}.home-filter-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.home-filter-grid label{display:flex;flex-direction:column;gap:4px;color:#6b7d76;font-size:12px;font-weight:700;min-width:0}.home-filter-grid input,.home-filter-grid select{width:100%;min-width:0;height:43px;border:1px solid #e1eae6;border-radius:11px;background:#f5f8f6;padding:8px 10px;color:#263b34;font-size:14px;outline:none}.home-filter-grid input:focus,.home-filter-grid select:focus{border-color:#68aa9b;box-shadow:0 0 0 3px #e3f2ed}.home-filter-submit{height:43px;border:1px solid #168579;background:#fff;color:#11766d;border-radius:11px;font-weight:800;align-self:end}.home-listing-head{display:flex;justify-content:space-between;align-items:end;gap:8px;margin:12px 0 7px}.home-eyebrow{font-size:9px;color:#0d8879;font-weight:800}.home-listing-head h2{font-size:20px;font-weight:800;margin:1px 0;color:#17352d;line-height:1.2}.home-listing-head p{font-size:11px;color:#7b8b84;margin:0;line-height:1.25}.home-listing-head>button{background:transparent;color:#087b6d;font-weight:800;white-space:nowrap}.home-city-chips{display:flex;flex-wrap:wrap;gap:5px;margin:0 0 8px}.home-city-chips button{background:#fff;border:1px solid #e1eae6;border-radius:25px;padding:5px 10px;color:#60716a;font-size:11px;line-height:1.2}.home-city-chips button.active{background:#e8f5f0;border-color:#c5e3d8;color:#0b6b5c;font-weight:800}
+        .home-property-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}.home-property-card{background:#fff;border:1px solid #e5ece8;border-radius:19px;overflow:hidden;box-shadow:0 4px 16px #193e3010;cursor:pointer;min-width:0;transition:transform .2s,box-shadow .2s}.home-property-card:hover{transform:translateY(-3px);box-shadow:0 12px 28px #193e3020}.home-property-image{height:205px;position:relative;background:#e5eee9}.home-property-image img{width:100%;height:100%;object-fit:cover;display:block}.home-property-tag{position:absolute;top:12px;left:12px;background:#fff;color:#0b6659;border-radius:9px;padding:6px 10px;font-size:12px;font-weight:800}.home-property-fav{position:absolute;right:12px;top:12px;width:37px;height:37px;border:0;border-radius:50%;background:#ffffffed;color:#61766d;font-size:17px}.home-property-body{padding:14px}.home-property-title{font-size:17px;line-height:1.4;font-weight:800;color:#18372f;margin:0 0 6px;min-height:46px}.home-property-location{font-size:12px;color:#75857e}.home-property-price{font-size:21px;color:#087665;font-weight:900;margin:12px 0 10px}.home-property-price small{font-size:12px;color:#82918a;font-weight:500}.home-property-meta{border-top:1px solid #edf1ef;padding-top:10px;color:#75857e;font-size:12px;display:flex;gap:9px;flex-wrap:wrap}.home-property-meta .verified{color:#07816c;font-weight:800}.home-empty{grid-column:1/-1;background:#fff;border:1px dashed #cadbd3;border-radius:16px;padding:40px;text-align:center;color:#73847c}
+        .nearby-search-panel button{cursor:pointer}.nearby-search-panel{padding:9px!important;gap:7px!important}.nearby-search-panel .nearby-gps-btn{padding:8px 11px!important;font-size:12px!important;line-height:1.25}.nearby-search-panel .nearby-control-btn{padding:7px 9px!important;font-size:11px!important}.nearby-search-panel #nearby-radius{padding:6px!important;font-size:12px!important;min-width:82px}.home-owner-cta{margin-top:28px;border-radius:19px;background:linear-gradient(120deg,#0d3932,#147866);color:white;padding:24px;display:flex;align-items:center;justify-content:space-between;gap:20px}.home-owner-cta span{font-size:12px;color:#bde8d9;font-weight:800}.home-owner-cta h3{font-size:22px;margin:5px 0}.home-owner-cta p{font-size:13px;color:#d1e6de;margin:0}.home-owner-cta button{flex:none;background:#f4b942;color:#26352e;border-radius:11px;padding:12px 16px;font-weight:900}
+        @media(max-width:900px){.home-filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.home-property-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+        @media(max-width:560px){.home-masthead{padding:12px 12px 14px}.home-brand b{font-size:19px}.home-brand-icon{width:37px;height:37px}.home-trust{font-size:10px;padding:6px 8px}.home-shell{padding:13px 11px 0}.home-type{padding:8px 13px;font-size:13px}.home-filter-panel{padding:12px;border-radius:16px}.home-filter-grid{gap:9px}.home-filter-grid label{font-size:11px}.home-filter-grid input,.home-filter-grid select{height:41px;font-size:13px;padding:7px}.home-filter-submit{font-size:13px;height:41px}.home-listing-head{margin-top:9px;margin-bottom:5px;align-items:center;gap:5px}.home-eyebrow{font-size:8px}.home-listing-head h2{font-size:16px;margin:1px 0;line-height:1.15}.home-listing-head p{font-size:9px;line-height:1.15}.home-listing-head>button{font-size:10px}.home-city-chips{gap:4px;margin-bottom:6px}.home-city-chips button{padding:4px 8px;font-size:10px}.home-listing-head h2{font-size:20px}.home-listing-head>button{font-size:12px}.home-property-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.home-property-card{border-radius:15px}.home-property-image{height:145px}.home-property-tag{top:8px;left:8px;font-size:10px;padding:5px 7px}.home-property-fav{top:8px;right:8px;width:31px;height:31px;font-size:15px}.home-property-body{padding:10px}.home-property-title{font-size:14px;line-height:1.35;min-height:38px}.home-property-location{font-size:10px}.home-property-price{font-size:17px;margin:8px 0}.home-property-price small{font-size:10px}.home-property-meta{font-size:10px;gap:5px;padding-top:8px}.home-city-chips{gap:6px}.home-city-chips button{padding:6px 11px;font-size:12px}.home-owner-cta{padding:17px;align-items:flex-start;flex-direction:column}.home-owner-cta h3{font-size:19px}.home-owner-cta button{width:100%}}
+        @media(max-width:360px){.home-property-grid{grid-template-columns:1fr}.home-property-image{height:190px}.home-filter-grid{grid-template-columns:1fr}}
+
+    
+        /* Global responsive repair: mobile-first layout for every page, form, modal and map */
+        *,*::before,*::after{box-sizing:border-box}
+        html,body{width:100%;max-width:100%;overflow-x:hidden}
+        img,video,iframe,canvas,svg{max-width:100%}
+        input,select,textarea,button{max-width:100%;font:inherit}
+        .tab-page{min-width:0;width:100%;overflow-x:clip}
+        #main-content,.container,.max-w-6xl,.max-w-5xl,.max-w-4xl{min-width:0}
+        .mobile-bottom-nav{display:none}
+        #nearby-map,#post-map-picker,#details-leaflet-map{width:100%;max-width:100%;min-width:0}
+        .leaflet-container{max-width:100%;touch-action:pan-x pan-y}
+        @media(max-width:767px){
+          body{padding-bottom:68px}
+          header{position:sticky;top:0}
+          header>.container{padding:9px 12px;gap:8px;flex-wrap:nowrap}
+          header a .w-10{width:36px;height:36px;flex:none}
+          header a .text-2xl{font-size:18px;white-space:nowrap}
+          header a .text-\[10px\]{font-size:8px}
+          header>div>div:last-child{gap:0}
+          header>div>div:last-child>button{padding:9px 10px;font-size:12px;white-space:nowrap}
+          .mobile-bottom-nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));position:fixed;left:0;right:0;bottom:0;z-index:90;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-top:1px solid #dce8e2;padding:7px 5px calc(7px + env(safe-area-inset-bottom));box-shadow:0 -5px 20px rgba(15,50,35,.08)}
+          .mobile-bottom-nav button{display:flex;min-width:0;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#49645a;font-size:10px;font-weight:700;padding:3px 1px;line-height:1.2}
+          .mobile-bottom-nav i{font-size:17px;color:#087b6d}
+          .home-masthead-inner{width:100%}
+          .home-search{min-width:0;width:100%;gap:7px;padding-left:10px}
+          .home-search input{font-size:14px!important}
+          .home-filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+          .home-property-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+          .nearby-search-panel{align-items:center!important;justify-content:space-between!important;padding:8px!important;gap:6px!important}
+          .nearby-search-panel>.nearby-gps-btn{width:auto!important;flex:1 1 100%;min-width:0;text-align:center;white-space:normal}
+          .nearby-search-panel>label{width:auto!important;flex:1 1 auto;min-width:0;text-align:left;font-size:11px!important}
+          .nearby-search-panel>.nearby-control-btn{width:auto!important;flex:0 0 auto;min-width:0;text-align:center}
+          #nearby-status{width:100%;line-height:1.35;font-size:10px!important;margin:0 2px}
+          #nearby-map-panel>div[id="nearby-map"]{height:300px!important}
+          .home-owner-cta{width:100%;min-width:0}
+          .home-owner-cta button{width:100%;white-space:normal}
+          footer .container{grid-template-columns:1fr!important;gap:22px!important}
+          .tab-page.py-8{padding-top:16px!important;padding-bottom:18px!important}
+          .tab-page .container{padding-left:12px!important;padding-right:12px!important}
+          .tab-page .bg-white.p-6{padding:14px!important}
+          .tab-page h1{font-size:22px!important;line-height:1.3}
+          .tab-page h2{font-size:20px!important;line-height:1.35}
+          .tab-page .grid{min-width:0}
+          .tab-page input,.tab-page select,.tab-page textarea{min-width:0;width:100%;font-size:16px}
+          #post-ad-form .grid,#post-ad-form .grid-cols-2{grid-template-columns:1fr!important}
+          #post-ad-form .flex{flex-wrap:wrap}
+          #post-map-picker{height:260px!important}
+          #details-leaflet-map{height:260px!important}
+          #detail-thumbnails{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+          #owner-auth-modal>div,#removal-request-modal>div{max-height:88dvh;overflow-y:auto;padding:16px!important}
+          #photo-lightbox{padding:8px!important}
+          #photo-lightbox img{max-width:94vw;max-height:78dvh}
+        }
+        @media(max-width:390px){
+          .home-property-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+          .home-property-image{height:125px}
+          .home-property-body{padding:8px}
+          .home-property-title{font-size:13px}
+          .home-property-price{font-size:15px}
+          .home-filter-grid{grid-template-columns:1fr}
+          .home-trust{display:none}
+          header a .text-2xl{font-size:16px}
+          header>div>div:last-child>button{padding:8px;font-size:11px}
+        }
+        @media(min-width:768px) and (max-width:1024px){
+          .home-property-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+          .home-filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+        }
+</style>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+      // Public browser key only. Never place a service_role/secret key here.
+      window.TOLET_SUPABASE_URL = 'https://luexpnxvonkzplalzyyo.supabase.co';
+      window.TOLET_SUPABASE_ANON_KEY = 'sb_publishable_2WfKQtW9MgzjYbbb4-gZfg_EQFom64_';
+      window.toletSupabase = window.supabase?.createClient(window.TOLET_SUPABASE_URL, window.TOLET_SUPABASE_ANON_KEY);
+    </script>
+
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased font-sans min-h-screen flex flex-col justify-between selection:bg-emerald-500 selection:text-white">
+
+    <!-- Top Announcement Bar -->
+    <div class="bg-emerald-950 text-emerald-200 text-xs py-2 px-4 text-center flex justify-between items-center border-b border-emerald-900">
+        <div class="container mx-auto flex justify-between items-center">
+            <span><i class="fa-solid fa-shield-halved text-amber-400 mr-1.5"></i> ১০০% এনআইডি (NID) ভেরিফাইড নিরাপদ বাসা ও সাবলেট প্ল্যাটফর্ম</span>
+            <div class="hidden sm:flex gap-4 items-center">
+                <span class="hover:text-white cursor-pointer"><i class="fa-solid fa-headset mr-1"></i> সাপোর্ট: 09612-000000</span>
+                <button onclick="switchTab('post-ad')" class="text-amber-400 font-semibold hover:underline">+ বাড়িওয়ালারা অ্যাড দিন</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation Header -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm transition-all duration-200">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            
+            <!-- Logo -->
+            <a href="#home" onclick="navigateHome(event); return false;" class="flex items-center gap-2.5 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-700 to-emerald-500 flex items-center justify-center text-white shadow-md shadow-emerald-600/30 group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-house-circle-check text-xl text-amber-300"></i>
+                </div>
+                <div>
+                    <span class="text-2xl font-extrabold tracking-tight text-slate-900 leading-none block">টু-লেট <span class="text-emerald-600">BD</span></span>
+                    <span class="text-[10px] text-slate-500 tracking-wider font-semibold uppercase">Smart Rental Ecosystem</span>
+                </div>
+            </a>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center gap-1 bg-slate-100/80 p-1 rounded-xl border border-slate-200/60 text-sm font-semibold">
+                <button type="button" onclick="navigateHome(event)" id="nav-home" class="nav-link px-4 py-2 rounded-lg transition-all bg-white text-emerald-700 shadow-sm">
+                    <i class="fa-solid fa-house mr-1.5"></i>হোম
+                </button>
+                <button onclick="switchTab('listings')" id="nav-listings" class="nav-link px-4 py-2 rounded-lg transition-all text-slate-600 hover:text-emerald-700 hover:bg-white/60">
+                    <i class="fa-solid fa-building mr-1.5"></i>All Ads
+                </button>
+                <button onclick="switchTab('post-ad')" id="nav-post-ad" class="nav-link px-4 py-2 rounded-lg transition-all text-slate-600 hover:text-emerald-700 hover:bg-white/60">
+                    <i class="fa-solid fa-plus-circle mr-1.5"></i>বিজ্ঞাপন দিন
+                </button>
+            </nav>
+
+            <!-- Separate NID verification entry -->
+            <button type="button" onclick="switchTab('owner-verification')" class="hidden sm:inline-flex text-sm font-bold text-emerald-700 px-3 py-2 rounded-lg border border-emerald-200">NID যাচাই</button>
+
+            <!-- Right CTA Button -->
+            <div class="flex items-center gap-3">
+                <button onclick="switchTab('post-ad')" class="bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-bold px-4 py-2.5 rounded-xl shadow-md shadow-emerald-600/20 text-sm flex items-center gap-2 hover:shadow-lg transition">
+                    <i class="fa-solid fa-file-circle-plus"></i>
+                    <span class="hidden sm:inline">বিজ্ঞাপন পোস্ট করুন</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile bottom navigation -->
+    <nav class="mobile-bottom-nav" aria-label="মোবাইল নেভিগেশন">
+      <button type="button" onclick="navigateHome(event)"><i class="fa-solid fa-house"></i><span>হোম</span></button>
+      <button type="button" onclick="switchTab('listings')"><i class="fa-solid fa-building"></i><span>বাসা খুঁজুন</span></button>
+      <button type="button" onclick="switchTab('post-ad')"><i class="fa-solid fa-circle-plus"></i><span>বিজ্ঞাপন দিন</span></button>
+      <button type="button" onclick="openOwnerAuth()"><i class="fa-solid fa-user"></i><span>অ্যাকাউন্ট</span></button>
+    </nav>
+
+    <!-- CONTENT SECTIONS (SPA Navigation Container) -->
+    <div id="main-content" class="flex-grow">
+
+        <!-- NEW HOMEPAGE: inspired by the supplied mobile reference -->
+        <section id="tab-home" class="tab-page rental-home">
+          <div class="home-masthead">
+            <div class="home-masthead-inner">
+              
+              <div class="home-search"><i class="fa-solid fa-magnifying-glass"></i><input id="home-search-text" type="text" placeholder="এলাকা, নাম বা বর্ণনা দিয়ে খুঁজুন..." oninput="filterHomeCards()"><button onclick="filterHomeCards()" aria-label="Search"><i class="fa-solid fa-arrow-right"></i></button></div>
+            </div>
+          </div>
+          <div class="home-shell">
+            <div class="category-scroll-wrap" id="category-scroll-wrap">
+            <div class="home-type-tabs" id="home-type-tabs" onscroll="updateCategoryCue()">
+              <button class="home-type active" data-cat="all" onclick="setHomeCategory('all',this)">সব</button>
+              <button class="home-type" data-cat="Family" onclick="setHomeCategory('Family',this)">🏠 বাসা</button>
+              <button class="home-type" data-cat="Family" onclick="setHomeCategory('Family',this)">🏢 ফ্ল্যাট</button>
+              <button class="home-type" data-cat="Bachelor" onclick="setHomeCategory('Bachelor',this)">🛏 মেস/হোস্টেল</button>
+              <button class="home-type" data-cat="Sublet" onclick="setHomeCategory('Sublet',this)">🔑 সাবলেট</button>
+              <button class="home-type" data-cat="Commercial" onclick="setHomeCategory('Commercial',this)">🏬 অফিস</button>
+              <button class="home-type" data-cat="Hotel" onclick="setHomeCategory('Hotel',this)">🏨 হোটেল</button>
+            </div>
+            <button type="button" id="category-more-cue" class="category-more-cue" aria-label="আরও ক্যাটাগরি দেখুন" title="আরও ক্যাটাগরি" onclick="scrollHomeCategories()"><span>আরও দেখুন <b>›</b></span></button>
+            </div>
+            <div class="home-filter-panel">
+              <div class="home-filter-grid">
+                <label>বিভাগ<select id="home-division"><option value="">সকল বিভাগ</option></select></label>
+                <label>জেলা<select id="home-district" disabled><option value="">আগে বিভাগ নির্বাচন করুন</option></select></label>
+                <label>উপজেলা<select id="home-upazila" disabled><option value="">আগে জেলা নির্বাচন করুন</option></select></label>
+                <label>এলাকা / মহল্লা<select id="home-area"><option value="">সকল এলাকা</option></select></label>
+                <label>সর্বনিম্ন ভাড়া (৳)<input id="home-min-price" type="number" min="0" placeholder="০"></label>
+                <label>সর্বোচ্চ ভাড়া (৳)<select id="home-filter-price"><option value="all">যেকোনো</option><option value="5000">৳ ৫,০০০</option><option value="10000">৳ ১০,০০০</option><option value="15000">৳ ১৫,০০০</option><option value="30000">৳ ৩০,০০০</option><option value="50000">৳ ৫০,০০০</option></select></label>
+                <label>সাজান<select id="home-sort"><option value="new">নতুন আগে</option><option value="low">কম ভাড়া আগে</option><option value="high">বেশি ভাড়া আগে</option></select></label>
+                <button class="home-filter-submit" onclick="filterHomeCards()"><i class="fa-solid fa-sliders"></i> ফিল্টার খুঁজুন</button><button type="button" class="home-filter-submit" onclick="resetHomeFilters()"><i class="fa-solid fa-rotate-left"></i> সব ফিল্টার মুছুন</button>
+              </div>
+            </div>
+            <div class="home-listing-head"><div><span class="home-eyebrow">সাম্প্রতিক বিজ্ঞাপন</span><h2>আপনার পছন্দের বাসা খুঁজুন</h2><p id="home-result-count">সাম্প্রতিক ভাড়ার বিজ্ঞাপনসমূহ</p></div><button onclick="switchTab('listings')">সব বিজ্ঞাপন <i class="fa-solid fa-arrow-right"></i></button></div>
+            <div class="home-city-chips"><button class="active" onclick="setHomeCity('',this)">সব</button><button onclick="setHomeCity('ঢাকা',this)">ঢাকা</button><button onclick="setHomeCity('চট্টগ্রাম',this)">চট্টগ্রাম</button><button onclick="setHomeCity('রাজশাহী',this)">রাজশাহী</button><button onclick="setHomeCity('সিলেট',this)">সিলেট</button><button onclick="setHomeCity('খুলনা',this)">খুলনা</button></div>
+            <div class="nearby-search-panel" style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;background:#eaf6f1;border:1px solid #cce6da;border-radius:14px;padding:9px;margin:0 0 12px">
+              <button type="button" class="nearby-gps-btn" onclick="searchNearbyProperties()" style="background:#087b6d;color:#fff;border-radius:9px;padding:8px 11px;font-weight:800"><i class="fa-solid fa-location-crosshairs"></i> GPS দিয়ে আশেপাশের বাসা ও হোটেল খুঁজুন</button>
+              <label style="font-size:13px;font-weight:700;color:#31584d">দূরত্ব <select id="nearby-radius" onchange="filterHomeCards()" style="margin-left:5px;border:1px solid #c8ddd4;border-radius:8px;padding:8px;background:#fff"><option value="3">৩ কিমি</option><option value="5">৫ কিমি</option><option value="10" selected>১০ কিমি</option><option value="25">২৫ কিমি</option><option value="50">৫০ কিমি</option></select></label>
+              <button type="button" class="nearby-control-btn" onclick="clearNearbySearch()" style="background:#fff;border:1px solid #c8ddd4;color:#31584d;border-radius:8px;padding:7px 9px;font-weight:700">GPS সার্চ বন্ধ</button>
+              <span id="nearby-status" style="font-size:12px;color:#45685c">আপনার অবস্থান অনুমতি দিলে কাছাকাছি বাসা, ফ্ল্যাট ও হোটেল দেখাবে।</span>
+              <button type="button" class="nearby-control-btn" onclick="toggleNearbyMap()" style="background:#fff;border:1px solid #c8ddd4;color:#31584d;border-radius:8px;padding:7px 9px;font-weight:700"><i class="fa-solid fa-map"></i> ম্যাপে দেখুন</button>
+            </div>
+            <div id="nearby-map-panel" class="hidden mb-4 rounded-xl overflow-hidden border border-emerald-200 bg-white"><div class="px-3 py-2 text-sm font-bold text-emerald-900">To-Let BD Map · OpenStreetMap</div><div id="nearby-map" style="height:360px;width:100%;z-index:1"></div><p class="px-3 py-2 text-xs text-slate-500">ম্যাপের পিন বিজ্ঞাপনে সংরক্ষিত latitude/longitude থেকে দেখানো হয়। নিজের অবস্থান পেতে GPS অনুমতি দিন।</p></div>
+            <div class="mb-3 rounded-xl border border-sky-200 bg-sky-50 px-3 py-2 text-xs text-sky-800">কোনো বিজ্ঞাপন ভুল, মেয়াদোত্তীর্ণ বা বাসা ভাড়া হয়ে গেলে বিস্তারিত পেজ থেকে সরানোর অনুরোধ পাঠান। যাচাই ছাড়া কেউ বিজ্ঞাপন মুছতে পারবে না।</div><div id="home-properties-grid" class="home-property-grid"></div>
+            <div class="home-owner-cta"><div><span><i class="fa-solid fa-house-circle-check"></i> বাড়িওয়ালা বা ম্যানেজার?</span><h3>আপনার বাসার বিজ্ঞাপন দিন</h3><p>বিজ্ঞাপন জমা দিন, যাচাই শেষে ভাড়াটিয়ারা আপনার সঙ্গে যোগাযোগ করতে পারবেন।</p></div><button onclick="switchTab('post-ad')">বিজ্ঞাপন পোস্ট করুন <i class="fa-solid fa-arrow-right"></i></button></div>
+          </div>
+        </section>
+
+        <!-- SECTION 2: ALL LISTINGS PAGE -->
+        <section id="tab-listings" class="tab-page hidden py-8">
+            <div class="container mx-auto px-4 max-w-6xl space-y-6">
+                
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-building-circle-check text-emerald-600"></i> All Ads
+                    </h2>
+                    
+                    <!-- Listings Filter Bar -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <input type="text" id="listing-search" onkeyup="filterListingsPage()" placeholder="খুঁজুন (বাসার শিরোনাম বা এলাকা)..." class="p-2.5 bg-slate-50 border rounded-xl text-sm focus:ring-2 focus:ring-emerald-600 outline-none">
+                        <select id="listing-cat" onchange="filterListingsPage()" class="p-2.5 bg-slate-50 border rounded-xl text-sm focus:ring-2 focus:ring-emerald-600 outline-none">
+                            <option value="all">সকল ক্যাটাগরি</option>
+                            <option value="Family">ফ্যামিলি বাসা</option>
+                            <option value="Bachelor">ব্যাচেলর মেস</option>
+                            <option value="Sublet">সাবলেট</option>
+                            <option value="Commercial">কমার্শিয়াল</option>
+                            <option value="Hotel">হোটেল / গেস্ট হাউস</option>
+                        </select>
+                        <select id="listing-sort" onchange="filterListingsPage()" class="p-2.5 bg-slate-50 border rounded-xl text-sm focus:ring-2 focus:ring-emerald-600 outline-none">
+                            <option value="newest">সর্বশেষ নতুন</option>
+                            <option value="low-high">ভাড়া: কম থেকে বেশি</option>
+                            <option value="high-low">ভাড়া: বেশি থেকে কম</option>
+                        </select>
+                        <button onclick="resetFilters()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-4 py-2.5 rounded-xl text-sm transition">
+                            <i class="fa-solid fa-rotate-left mr-1"></i> রিসেট ফিল্টার
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Grid View -->
+                <div id="all-properties-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Dynamic Listing Items -->
+                </div>
+
+                <div id="no-listings-found" class="hidden text-center py-16 bg-white rounded-2xl border border-dashed border-slate-300">
+                    <i class="fa-solid fa-folder-open text-4xl text-slate-300 mb-3"></i>
+                    <p class="text-slate-500 font-medium">আপনার ফিল্টার অনুযায়ী কোনো বাসা পাওয়া যায়নি!</p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Standalone owner identity verification page -->
+        <section id="tab-owner-verification" class="tab-page hidden py-8">
+          <div class="container mx-auto px-4 max-w-2xl">
+            <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-xl border border-slate-200">
+              <div class="text-center border-b pb-5 mb-6">
+                <span class="inline-flex rounded-full bg-emerald-100 text-emerald-800 px-3 py-1 text-xs font-bold">আলাদা পরিচয় যাচাই</span>
+                <h2 class="text-2xl font-extrabold mt-3">শুধু NID Verification আবেদন</h2>
+                <p class="text-sm text-slate-500 mt-2">বাড়ি ভাড়ার বিজ্ঞাপন না দিয়েও আলাদাভাবে পরিচয় যাচাইয়ের আবেদন করতে পারবেন।</p>
+              </div>
+              <form id="owner-verification-form" onsubmit="handleOwnerVerificationSubmit(event)" class="space-y-4">
+                <label class="block text-sm font-bold">NID অনুযায়ী পূর্ণ নাম *
+                  <input id="verify-nid-name" required autocomplete="name" class="mt-1 w-full p-3 border rounded-xl" placeholder="আপনার পূর্ণ নাম">
+                </label>
+                <label class="block text-sm font-bold">জন্মতারিখ *
+                  <input id="verify-nid-dob" type="date" required class="mt-1 w-full p-3 border rounded-xl">
+                </label>
+                <label class="block text-sm font-bold">NID নম্বর *
+                  <input id="verify-nid-number" required inputmode="numeric" minlength="10" maxlength="17" pattern="[0-9]{10}|[0-9]{13}|[0-9]{17}" class="mt-1 w-full p-3 border rounded-xl" placeholder="১০ / ১৩ / ১৭ ডিজিট">
+                </label>
+                <label class="block text-sm font-bold">যোগাযোগের ফোন নম্বর *
+                  <input id="verify-nid-phone" required type="tel" autocomplete="tel" class="mt-1 w-full p-3 border rounded-xl" placeholder="01XXXXXXXXX">
+                </label>
+                <label class="block text-sm font-bold">নিজের সাম্প্রতিক ছবি *
+                  <input id="verify-nid-selfie" required type="file" accept="image/jpeg,image/png,image/webp" class="mt-1 block w-full p-2 border rounded-xl bg-white">
+                </label>
+                <label class="block text-sm font-bold">NID-এর সামনের ছবি *
+                  <input id="verify-nid-front" required type="file" accept="image/jpeg,image/png,image/webp" class="mt-1 block w-full p-2 border rounded-xl bg-white">
+                </label>
+                <label class="block text-sm font-bold">NID-এর পেছনের ছবি *
+                  <input id="verify-nid-back" required type="file" accept="image/jpeg,image/png,image/webp" class="mt-1 block w-full p-2 border rounded-xl bg-white">
+                </label>
+                <div class="rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900">
+                  নিরাপত্তা: NID নম্বর server-side AES-256-GCM encryption করে Database-এ রাখা হবে এবং ছবি private verification bucket-এ যাবে। প্রতিটি ছবি সর্বোচ্চ ৫ MB; Admin ছাড়া অন্য কেউ দেখতে পারবে না। Backend চালু হওয়ার আগে আসল NID জমা দেবেন না।
+                </div>
+                <button type="submit" class="w-full py-3 rounded-xl bg-emerald-700 text-white font-extrabold">NID Verification-এর জন্য আবেদন করুন</button>
+              </form>
+              <button type="button" onclick="switchTab('post-ad')" class="mt-4 text-sm font-bold text-emerald-700">বাড়ির বিজ্ঞাপন দিতে চান? এখানে যান →</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 3: POST AD FORM WIZARD -->
+        <section id="tab-post-ad" class="tab-page hidden py-8">
+            <div class="container mx-auto px-4 max-w-3xl">
+                <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-xl border border-slate-200">
+                    
+                    <div class="text-center mb-8 border-b pb-6">
+                        <div class="flex justify-center mb-3"><button type="button" onclick="openOwnerAuth()" class="text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 rounded-full px-4 py-2"><i class="fa-solid fa-user mr-1"></i> ইমেইল দিয়ে লগইন / রেজিস্ট্রেশন</button></div><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full">বাড়িওয়ালা ও মেস মালিকদের জন্য</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2">বাসা ভাড়ার নতুন বিজ্ঞাপন জমা দিন</h2>
+                        <button type="button" onclick="switchTab('owner-verification')" class="mt-3 text-sm font-bold text-emerald-700 underline">শুধু NID Verification করতে চান?</button>
+                        <p class="text-slate-500 text-sm mt-1">পরিচয় যাচাইয়ের তথ্য ও বাসার সম্পূর্ণ বিবরণ দিন। NID নম্বর/ছবি কখনো পাবলিক পেজে দেখানো হবে না।</p>
+                    </div>
+
+                    <form id="post-ad-form" onsubmit="handlePostAdSubmit(event)" class="space-y-6">
+                        
+                        <!-- NID verification is a separate workflow; property ads do not require NID fields here. -->
+                        <div class="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900">
+                          <i class="fa-solid fa-shield-check mr-1"></i>
+                          NID Verification সম্পন্ন না হলে আপনার বাড়ি ভাড়ার বিজ্ঞাপন অনুমোদন করা হবে না।
+                          
+                        </div>
+
+                        <!-- Ad Primary Info -->
+                        <div class="space-y-4">
+                            <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2 border-b pb-2">
+                                <i class="fa-solid fa-circle-info text-emerald-600"></i> ১. বিজ্ঞাপনের প্রাথমিক বিবরণ
+                            </h3>
+                            
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">বিজ্ঞাপনের শিরোনাম *</label>
+                                <input type="text" id="post-title" required placeholder="যেমন: চাটমোহরে আলো-বাতাসপূর্ণ ৩ বেডরুমের ফ্যামিলি ফ্লাট ভাড়া" class="w-full p-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-600 outline-none">
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <label class="block text-xs font-bold text-slate-700">ক্যাটাগরি *<select id="post-category" required class="mt-1 w-full p-2.5 border border-slate-300 rounded-lg text-sm"><option value="Family">ফ্যামিলি বাসা</option><option value="Bachelor">ব্যাচেলর মেস</option><option value="Sublet">সাবলেট</option><option value="Commercial">দোকান / অফিস</option><option value="Hotel">হোটেল / গেস্ট হাউস</option></select></label>
+                                <label class="block text-xs font-bold text-slate-700"><span id="post-price-label">মাসিক ভাড়া (৳)</span> *<input type="number" id="post-price" required min="1" placeholder="১৫০০০" class="mt-1 w-full p-2.5 border border-slate-300 rounded-lg text-sm"></label>
+                            </div>
+                            <p id="hotel-price-hint" class="text-xs text-slate-500">হোটেল নির্বাচন করলে ভাড়া প্রতি রাত হিসেবে গণনা হবে; অন্যান্য ক্যাটাগরির ভাড়া মাসিক হিসেবে দেখানো হবে।</p>
+                            <div class="rounded-xl border border-blue-200 bg-blue-50 p-4 space-y-2">
+                              <h4 class="font-bold text-sm text-slate-900"><i class="fa-solid fa-phone text-emerald-700 mr-1"></i> যোগাযোগের তথ্য</h4>
+                              <label class="block text-xs font-bold text-slate-700">বিজ্ঞাপনে দেখানোর ফোন নম্বর *
+                                <input type="tel" id="post-owner-phone" required inputmode="tel" autocomplete="tel" pattern="01[3-9][0-9]{8}" maxlength="11" placeholder="01XXXXXXXXX" class="mt-1 w-full p-2.5 border border-slate-300 rounded-lg bg-white text-sm">
+                              </label>
+                              <p class="text-[11px] text-slate-600">এই নম্বরটি বিজ্ঞাপনের বিস্তারিত পেজে দেখা যাবে এবং ভাড়াটিয়ারা কল/WhatsApp করতে পারবেন।</p>
+                            </div>
+                            <div class="rounded-xl border border-emerald-100 bg-emerald-50/50 p-4 space-y-3">
+                                <h4 class="font-bold text-slate-800 text-sm"><i class="fa-solid fa-map-location-dot text-emerald-700 mr-1"></i> বাসার ঠিকানা নির্বাচন করুন</h4>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <label class="block text-xs font-bold text-slate-700">বিভাগ *<select id="postDivision" required class="mt-1 w-full p-2.5 border rounded-lg bg-white"><option value="">বিভাগ লোড হচ্ছে...</option></select></label>
+                                    <label class="block text-xs font-bold text-slate-700">জেলা *<select id="postDistrict" required disabled class="mt-1 w-full p-2.5 border rounded-lg bg-white"><option value="">আগে বিভাগ নির্বাচন করুন</option></select></label>
+                                    <label class="block text-xs font-bold text-slate-700">উপজেলা / থানা *<select id="postUpazila" required disabled class="mt-1 w-full p-2.5 border rounded-lg bg-white"><option value="">আগে জেলা নির্বাচন করুন</option></select></label>
+                                    <label class="block text-xs font-bold text-slate-700">এলাকা / ইউনিয়ন / ওয়ার্ড<select id="postArea" class="mt-1 w-full p-2.5 border rounded-lg bg-white"><option value="">আগে উপজেলা নির্বাচন করুন</option></select></label>
+                                </div>
+                                <label class="block text-xs font-bold text-slate-700">বাড়ি / রোড / গ্রাম / মহল্লার বিস্তারিত ঠিকানা *<input type="text" id="post-location" required placeholder="বাড়ি নম্বর, রোড, গ্রাম বা পরিচিত স্থান" class="mt-1 w-full p-2.5 border rounded-lg bg-white"></label>
+                                <p class="text-[11px] text-slate-500">বিভাগ, জেলা ও উপজেলা তালিকা বাংলাদেশের প্রশাসনিক কাঠামো অনুযায়ী ধারাবাহিকভাবে দেখানো হবে।</p>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <label class="block text-xs font-bold text-slate-700">কারা ভাড়া নিতে পারবেন? *<select id="post-rent-gender" required class="mt-1 w-full p-2.5 border rounded-lg text-sm"><option value="both">নারী ও পুরুষ উভয়েই</option><option value="male">শুধু পুরুষ</option><option value="female">শুধু নারী</option><option value="family">শুধু পরিবার</option></select></label>
+                                <label class="block text-xs font-bold text-slate-700">বাসা কবে থেকে পাওয়া যাবে?<input type="date" id="post-available-from" class="mt-1 w-full p-2.5 border rounded-lg text-sm"></label>
+                            </div>
+                            <div><label class="block text-xs font-bold text-slate-700 mb-1">বাসার বিস্তারিত বিবরণ *</label><textarea id="post-description" required rows="5" maxlength="2500" placeholder="বাসার ঠিকানা, আয়তন, সুবিধা, গ্যাস-পানি-বিদ্যুৎ, অগ্রিম/সার্ভিস চার্জ, নিয়মাবলি ইত্যাদি বিস্তারিত লিখুন..." class="w-full p-3 border border-slate-300 rounded-lg text-sm"></textarea></div>
+                            <div class="rounded-xl border border-emerald-200 bg-emerald-50/40 p-4 space-y-3">
+                              <div><h4 class="font-bold text-slate-900 text-sm">বাসার সুবিধাসমূহ যোগ করুন</h4><p class="text-xs text-slate-500 mt-1">Built-in সুবিধা বেছে নিন, নিজের সুবিধা লিখে Add করুন। যেকোনো সুবিধা পরে Edit বা Remove করতে পারবেন।</p></div>
+                              <div id="post-amenity-presets" class="flex flex-wrap gap-2"></div>
+                              <div class="flex gap-2"><input id="post-custom-amenity" maxlength="60" class="min-w-0 flex-1 rounded-lg border border-slate-300 bg-white p-2.5 text-sm" placeholder="নিজের সুবিধার নাম লিখুন"><button type="button" onclick="addCustomAmenity('post')" class="rounded-lg bg-emerald-700 px-4 text-sm font-bold text-white">Add</button></div>
+                              <div id="post-amenity-selected" class="flex flex-wrap gap-2 min-h-7"></div>
+                              <label class="block text-xs font-bold text-slate-700">সুবিধাসমূহের অতিরিক্ত বিবরণ (ঐচ্ছিক)<textarea id="post-amenity-description" rows="2" maxlength="800" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2.5 text-sm" placeholder="যেমন: ২৪ ঘণ্টা পানি, আলাদা গ্যাস মিটার ইত্যাদি"></textarea></label>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1">বেডরুম সংখ্যা</label>
+                                    <input type="number" id="post-beds" value="2" min="1" class="w-full p-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-600 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1">বাথরুম সংখ্যা</label>
+                                    <input type="number" id="post-baths" value="2" min="1" class="w-full p-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-600 outline-none">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Interactive Map Location Picker -->
+                        <div class="space-y-2">
+                            <label class="block text-xs font-bold text-slate-700">
+                                <i class="fa-solid fa-map-location-dot text-red-500"></i> ২. ম্যাপে বাসার সুনির্দিষ্ট অবস্থান পিন করুন *
+                            </label>
+                            <p class="text-xs text-slate-500">GPS দিয়ে নিজের বর্তমান অবস্থান ম্যাপে আনুন, অথবা ম্যাপে ক্লিক করে বাসার সঠিক অবস্থান পিন করুন।</p>
+                            <button type="button" id="post-use-gps" onclick="usePostAdGpsLocation()" class="inline-flex items-center gap-2 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2.5 text-sm font-extrabold shadow-sm"><i class="fa-solid fa-location-crosshairs"></i> GPS দিয়ে আমার অবস্থান নিন</button>
+                            <p id="post-gps-status" class="text-xs text-slate-500" aria-live="polite">GPS-এর নির্ভুলতা দেখানো হবে। ভুল হলে জায়গার নাম লিখে খুঁজুন অথবা ম্যাপে ক্লিক করে পিন বসান।</p>
+                            <div class="flex gap-2"><input id="post-map-place-query" class="min-w-0 flex-1 rounded-lg border border-slate-300 p-2.5 text-sm" placeholder="এলাকা / উপজেলা / জেলা লিখুন (যেমন: সিরাজগঞ্জ সদর)"><button type="button" onclick="searchPostMapPlace()" class="rounded-lg bg-slate-800 px-4 text-sm font-bold text-white">ম্যাপে খুঁজুন</button></div>
+                            <div id="post-map-picker" class="h-64 w-full rounded-xl border border-slate-300"></div>
+                            <div class="flex gap-4 text-xs font-mono text-slate-500 bg-slate-100 p-2 rounded-lg">
+                                <span>Lat: <strong id="picked-lat" class="text-slate-800">24.0864</strong></span>
+                                <span>Lng: <strong id="picked-lng" class="text-slate-800">89.2831</strong></span>
+                            </div>
+                        </div>
+
+                        <!-- Separate photo and video attachments -->
+                        <div class="space-y-4">
+                            <h3 class="font-bold text-slate-900 text-sm border-b pb-2"><i class="fa-solid fa-photo-film text-emerald-600 mr-1"></i> ৩. ছবি ও ভিডিও সংযুক্ত করুন</h3>
+                            <div class="rounded-xl border-2 border-dashed border-emerald-200 bg-emerald-50/50 p-4 space-y-2">
+                                <label class="block text-sm font-bold text-slate-800"><i class="fa-solid fa-images text-emerald-700 mr-1"></i> শুধু বাসার ছবি সংযুক্ত করুন</label>
+                                <input type="file" id="post-property-photos" accept="image/jpeg,image/png,image/webp" multiple class="block w-full text-sm bg-white border rounded-lg p-2">
+                                <p class="text-[11px] text-slate-500">JPG, PNG বা WebP · প্রয়োজনমতো একাধিক ছবি নির্বাচন করুন; নির্দিষ্ট সংখ্যা সীমা নেই।</p>
+                                <div id="post-photo-preview" class="grid grid-cols-3 sm:grid-cols-4 gap-2"></div>
+                            </div>
+                            <div class="rounded-xl border-2 border-dashed border-blue-200 bg-blue-50/50 p-4 space-y-2">
+                                <label class="block text-sm font-bold text-slate-800"><i class="fa-solid fa-video text-blue-700 mr-1"></i> শুধু বাসার ভিডিও সংযুক্ত করুন</label>
+                                <input type="file" id="post-property-video" accept="video/mp4,video/webm,video/quicktime" multiple class="block w-full text-sm bg-white border rounded-lg p-2">
+                                <p class="text-[11px] text-slate-500">MP4, WebM বা MOV · প্রয়োজনমতো একাধিক ভিডিও নির্বাচন করুন; নির্দিষ্ট সংখ্যা সীমা নেই।</p>
+                                <div id="post-video-preview" class="text-xs text-slate-600"></div>
+                            </div>
+                            <p class="text-[11px] text-amber-800 bg-amber-50 border border-amber-200 rounded-lg p-3">ছবি ও ভিডিও Supabase Storage-এ আলাদা Bucket-এ সংরক্ষিত হবে। শুধু অনুমোদিত বিজ্ঞাপনের মিডিয়াই Public Listing-এ দেখানো হবে।</p>
+                        </div>
+
+                        <div class="rounded-xl border border-blue-200 bg-blue-50 p-4 space-y-2">
+                            <h3 class="font-bold text-blue-900 text-sm"><i class="fa-solid fa-user-lock mr-1"></i> মালিক অ্যাকাউন্ট ও পরবর্তী বিজ্ঞাপন</h3>
+                            <p class="text-xs text-blue-800">একই মালিক ফোন নম্বর ও পাসওয়ার্ড দিয়ে লগইন করে পরবর্তী বিজ্ঞাপন দিতে পারবেন। Google দিয়ে সাইন ইন অপশনও রাখা হয়েছে। বাস্তব অ্যাকাউন্ট Supabase Authentication দিয়ে পরিচালিত হয়। ফোন Login-এর জন্য Supabase Phone Provider চালু থাকতে হবে। Google Login চালু করতে Supabase Google OAuth কনফিগারেশন প্রয়োজন।</p>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold py-3.5 rounded-xl shadow-lg transition text-base flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span>অ্যাডমিন রিভিউয়ের জন্য জমা দিন</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 5: PROPERTY DETAILS PAGE (MODAL / SINGLE VIEW) -->
+        <section id="tab-property-details" class="tab-page hidden py-8">
+            <div class="container mx-auto px-4 max-w-5xl space-y-6">
+                
+                <button onclick="switchTab('listings')" class="inline-flex items-center gap-2 text-sm font-bold text-emerald-700 hover:text-emerald-800 bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-200 hover:shadow">
+                    <i class="fa-solid fa-arrow-left"></i> সকল বিজ্ঞাপনে ফিরে যান
+                </button>
+
+                <div class="grid grid-cols-1 gap-6">
+                    
+                    <!-- Left Main Column -->
+                    <div class="space-y-6">
+                        
+                        <!-- Media Gallery Header Card -->
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                            <!-- Media comes first: photos and video are the first things visitors see -->
+                            <!-- Gallery & Video Tabs -->
+                            <div class="space-y-3">
+                                <div class="flex border-b border-slate-200 gap-4 text-sm font-bold">
+                                    <button onclick="switchMediaTab('photos')" id="btn-media-photos" class="py-2 border-b-2 border-emerald-600 text-emerald-700">
+                                        <i class="fa-solid fa-images mr-1"></i> ছবি গ্যালারি
+                                    </button>
+                                    <button onclick="switchMediaTab('video')" id="btn-media-video" class="py-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800">
+                                        <i class="fa-solid fa-video mr-1 text-red-500"></i> ভিডিও ট্যুর (HD)
+                                    </button>
+                                </div>
+
+                                <!-- Photo Container -->
+                                <div id="media-photos-container" class="space-y-2">
+                                    <img id="detail-main-img" src="" class="w-full h-72 sm:h-96 object-cover rounded-xl shadow-inner border">
+                                    <div id="detail-thumbnails" class="grid grid-cols-3 sm:grid-cols-4 gap-2"></div>
+                                </div>
+
+                                <!-- Video Container -->
+                                <div id="media-video-container" class="hidden">
+                                    <div class="bg-black rounded-xl overflow-hidden shadow-lg border">
+                                        <video id="detail-video-player" controls class="w-full h-72 sm:h-96 object-contain bg-black">
+                                            আপনার ব্রাউজার ভিডিও প্লেব্যাক সাপোর্ট করে না।
+                                        </video>
+                                        <p id="detail-video-empty" class="text-center text-xs text-slate-400 py-3">এই বিজ্ঞাপনে ভিডিও সংযুক্ত করা হয়নি।</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Property information follows the media gallery -->
+                            <div class="flex flex-wrap items-center justify-between gap-2 pt-2">
+                                <span id="detail-category-badge" class="bg-emerald-100 text-emerald-800 font-bold text-xs px-3 py-1 rounded-full">Family</span>
+                                <span id="detail-nid-badge" class="bg-blue-100 text-blue-800 font-bold text-xs px-3 py-1 rounded-full flex items-center gap-1">
+                                    <i class="fa-solid fa-circle-check"></i> পরিচয় যাচাই করা হয়েছে
+                                </span>
+                            </div>
+                            <h1 id="detail-title" class="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-snug">--</h1>
+                            <p id="detail-location" class="text-slate-500 text-sm flex items-center gap-1.5"><i class="fa-solid fa-location-dot text-red-500"></i> --</p>
+                            <div class="flex flex-wrap gap-2 text-xs font-bold"><span id="detail-rent-gender" class="rounded-full bg-indigo-50 text-indigo-700 px-3 py-1">ভাড়াটিয়া: নারী/পুরুষ</span></div>
+                            <div class="rounded-xl bg-slate-50 border p-4"><h3 class="font-bold text-slate-800 mb-2">বাসার বিস্তারিত বিবরণ</h3><p id="detail-description" class="text-sm text-slate-600 whitespace-pre-line">--</p></div>
+                            <div id="detail-published" class="text-xs text-slate-500"></div>
+                            <div id="rented-notice" class="hidden rounded-xl border border-amber-200 bg-amber-50 text-amber-800 p-3 text-sm font-bold">এই বাসাটি ভাড়া হয়ে গেছে। অনুগ্রহ করে যোগাযোগের আগে অবস্থা যাচাই করুন।</div>
+                            <div class="flex flex-wrap gap-2" id="public-ad-actions"><button type="button" onclick="openRemovalRequest()" class="px-4 py-2.5 rounded-xl bg-slate-100 text-slate-700 text-sm font-bold hover:bg-slate-200"><i class="fa-regular fa-flag mr-1"></i> বিজ্ঞাপন সরানোর অনুরোধ</button></div>
+                        </div>
+
+                        <!-- Amenities & Features Card -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                            <h3 class="text-lg font-bold text-slate-900 border-b border-slate-100 pb-2 flex items-center gap-2">
+                                <i class="fa-solid fa-list-check text-emerald-600"></i> বাসার সুবিধাসমূহ ও বিবরণ
+                            </h3>
+                            
+                            <p id="detail-amenity-description" class="text-slate-600 text-sm leading-relaxed whitespace-pre-line"></p>
+                            <div id="detail-amenities-list" class="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2 text-xs font-semibold text-slate-700"></div>
+                        </div>
+
+                        <!-- Interactive Leaflet Map for Property Location -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-3">
+                            <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                                <i class="fa-solid fa-map-location-dot text-red-500"></i> ম্যাপে বাসার সুনির্দিষ্ট অবস্থান
+                            </h3>
+                            <p class="text-xs text-slate-500">সরাসরি গুগল / ওপেনস্ট্রিটম্যাপ পয়েন্ট দেখে লোকেশন নিশ্চিত হোন:</p>
+                            <div id="details-leaflet-map" class="h-72 w-full rounded-xl border border-slate-200"></div>
+                        </div>
+                    </div>
+
+                    <!-- Right Sticky Sidebar: Rent & Owner Profile Card -->
+                    <div class="space-y-6">
+                        <div class="bg-white p-6 rounded-2xl shadow-xl border border-slate-200 space-y-6">
+                            
+                            <!-- Price Tag -->
+                            <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-100 text-center">
+                                <span id="detail-price-label" class="text-xs text-emerald-800 font-extrabold uppercase">মাসিক ভাড়া</span>
+                                <div class="text-3xl font-black text-emerald-900 mt-1">
+                                    ৳ <span id="detail-price">--</span> <span id="detail-price-unit" class="text-xs text-slate-500 font-normal">/মাস</span>
+                                </div>
+                            </div>
+
+                            <!-- Beds / Baths Spec Pills -->
+                            <div class="grid grid-cols-2 gap-2 text-center text-xs font-bold text-slate-700">
+                                <div class="bg-slate-100 p-2.5 rounded-lg border">
+                                    <i class="fa-solid fa-bed text-emerald-600 mr-1"></i> <span id="detail-beds">0</span> টি বেডরুম
+                                </div>
+                                <div class="bg-slate-100 p-2.5 rounded-lg border">
+                                    <i class="fa-solid fa-bath text-emerald-600 mr-1"></i> <span id="detail-baths">0</span> টি বাথরুম
+                                </div>
+                            </div>
+
+                            <!-- Verified Owner Info Block -->
+                            <div class="border-t border-b border-slate-100 py-4 space-y-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 rounded-full bg-emerald-800 text-amber-300 flex items-center justify-center font-bold text-lg shadow">
+                                        <i class="fa-solid fa-user-check"></i>
+                                    </div>
+                                    <div>
+                                        <h4 id="detail-owner-name" class="font-bold text-slate-900 text-sm">--</h4>
+                                        <span class="inline-flex items-center gap-1 text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+                                            <i class="fa-solid fa-shield-check"></i> পরিচয় যাচাইকৃত মালিক
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="rounded-lg bg-slate-50 border p-3">
+                                  <div class="text-[11px] text-slate-500 font-bold mb-1">যোগাযোগের ফোন নম্বর</div>
+                                  <a id="detail-owner-phone" href="#" class="font-extrabold text-emerald-800 text-base">--</a>
+                                </div>
+
+                            </div>
+
+                            <!-- Direct Action Buttons -->
+                            <div class="space-y-2.5">
+                                <a id="btn-call-owner" href="#" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 rounded-xl shadow transition flex items-center justify-center gap-2 text-sm">
+                                    <i class="fa-solid fa-phone"></i> সরাসরি কল করুন
+                                </a>
+                                <a id="btn-whatsapp-owner" href="#" target="_blank" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 rounded-xl shadow transition flex items-center justify-center gap-2 text-sm">
+                                    <i class="fa-brands fa-whatsapp text-lg"></i> হোয়াটসঅ্যাপে চ্যাট করুন
+                                </a>
+                            </div>
+
+                            <p class="text-[11px] text-slate-400 text-center">
+                                <i class="fa-solid fa-circle-exclamation mr-1"></i> কোনো আর্থিক লেনদেনের পূর্বে সরজমিনে বাসা পরিদর্শন করুন।
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Full-page owner property editor -->
+        <section id="tab-owner-property-edit" class="tab-page hidden py-8">
+          <div class="container mx-auto px-4 max-w-3xl">
+            <button type="button" onclick="backToOwnerAccount()" class="mb-5 inline-flex items-center gap-2 rounded-xl border bg-white px-4 py-2.5 text-sm font-bold text-emerald-800"><i class="fa-solid fa-arrow-left"></i> আমার অ্যাকাউন্টে ফিরে যান</button>
+            <div class="rounded-2xl border border-slate-200 bg-white p-5 sm:p-8 shadow-sm">
+              <div class="mb-6 border-b pb-5"><span class="text-xs font-extrabold text-emerald-700">OWNER DASHBOARD</span><h1 class="mt-1 text-2xl font-extrabold text-slate-900">বিজ্ঞাপনের বিস্তারিত সম্পাদনা</h1><p class="mt-2 text-sm text-slate-500">পরিবর্তন সংরক্ষণ করলে বিজ্ঞাপনটি পুনরায় Admin Review-এর জন্য Pending হবে।</p></div>
+              <form id="owner-property-edit-form" onsubmit="saveOwnerPropertyEdit(event)" class="space-y-4">
+                <input type="hidden" id="owner-edit-property-id">
+                <label class="block text-sm font-bold">বিজ্ঞাপনের শিরোনাম *<input id="owner-edit-title" required maxlength="160" class="mt-1 w-full rounded-xl border border-slate-300 p-3" placeholder="বিজ্ঞাপনের শিরোনাম"></label>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <label class="block text-sm font-bold">ক্যাটাগরি<select id="owner-edit-category" class="mt-1 w-full rounded-xl border border-slate-300 bg-white p-3"><option value="Family">ফ্যামিলি বাসা</option><option value="Bachelor">ব্যাচেলর মেস</option><option value="Sublet">সাবলেট</option><option value="Commercial">দোকান / অফিস</option><option value="Hotel">হোটেল / গেস্ট হাউস</option></select></label>
+                  <label class="block text-sm font-bold">ভাড়া (৳) *<input id="owner-edit-price" required type="number" min="1" class="mt-1 w-full rounded-xl border border-slate-300 p-3"></label>
+                </div>
+                <label class="block text-sm font-bold">ঠিকানা *<input id="owner-edit-address" required maxlength="500" class="mt-1 w-full rounded-xl border border-slate-300 p-3"></label>
+                <label class="block text-sm font-bold">বিস্তারিত বিবরণ *<textarea id="owner-edit-description" required rows="7" maxlength="2500" class="mt-1 w-full rounded-xl border border-slate-300 p-3"></textarea></label>
+                <div class="rounded-xl border border-emerald-200 bg-emerald-50/40 p-4 space-y-3">
+                  <h3 class="font-bold text-sm">সুবিধাসমূহ Edit করুন</h3>
+                  <div id="edit-amenity-presets" class="flex flex-wrap gap-2"></div>
+                  <div class="flex gap-2"><input id="edit-custom-amenity" maxlength="60" class="min-w-0 flex-1 rounded-lg border bg-white p-2.5 text-sm" placeholder="নতুন সুবিধা লিখুন"><button type="button" onclick="addCustomAmenity('edit')" class="rounded-lg bg-emerald-700 px-4 text-sm font-bold text-white">Add</button></div>
+                  <div id="edit-amenity-selected" class="flex flex-wrap gap-2 min-h-7"></div>
+                  <label class="block text-xs font-bold">সুবিধাসমূহের অতিরিক্ত বিবরণ<textarea id="owner-edit-amenity-description" rows="2" maxlength="800" class="mt-1 w-full rounded-lg border bg-white p-2.5 text-sm"></textarea></label>
+                </div>
+                <label class="block text-sm font-bold">কারা ভাড়া নিতে পারবেন?<select id="owner-edit-rent-gender" class="mt-1 w-full rounded-xl border border-slate-300 bg-white p-3"><option value="both">নারী ও পুরুষ উভয়েই</option><option value="male">শুধু পুরুষ</option><option value="female">শুধু নারী</option><option value="family">শুধু পরিবার</option></select></label>
+                <label class="block text-sm font-bold">বাসা কবে থেকে পাওয়া যাবে?<input id="owner-edit-available-from" type="date" class="mt-1 w-full rounded-xl border border-slate-300 p-3"></label>
+                <div class="flex flex-col sm:flex-row gap-3 pt-3"><button id="owner-edit-save" type="submit" class="flex-1 rounded-xl bg-emerald-700 px-5 py-3 font-extrabold text-white"><i class="fa-solid fa-floppy-disk mr-2"></i> পরিবর্তন সংরক্ষণ করুন</button><button type="button" onclick="deleteOwnerPropertyFromEditPage()" class="rounded-xl border border-red-200 bg-red-50 px-5 py-3 font-bold text-red-700"><i class="fa-solid fa-trash mr-2"></i> বিজ্ঞাপন Delete করুন</button></div>
+              </form>
+              <p id="owner-edit-feedback" class="mt-4 text-sm" role="status" aria-live="polite"></p>
+            </div>
+          </div>
+        </section>
+
+    </div>
+
+
+    <div id="owner-auth-modal" class="hidden fixed inset-0 z-[110] bg-slate-950/70 items-center justify-center p-4"><div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-5"><div class="flex items-center justify-between mb-3"><h3 class="text-lg font-extrabold">আমার অ্যাকাউন্ট</h3><button type="button" onclick="closeOwnerAuth()" class="text-slate-500 text-2xl">&times;</button></div><div class="flex gap-2 mb-4"><button type="button" onclick="setAuthMode('login')" id="auth-login-tab" class="flex-1 rounded-lg bg-emerald-700 text-white py-2 font-bold">লগইন</button><button type="button" onclick="setAuthMode('register')" id="auth-register-tab" class="flex-1 rounded-lg bg-slate-100 text-slate-700 py-2 font-bold">রেজিস্ট্রেশন</button></div><form id="owner-auth-form" onsubmit="demoOwnerAuth(event)" class="space-y-3"><div id="auth-register-fields" class="hidden"><label class="block text-sm font-semibold">পূর্ণ নাম<input id="auth-name" type="text" placeholder="আপনার নাম" class="mt-1 w-full border rounded-lg p-2.5"></label></div><label class="block text-sm font-semibold">ইমেইল<input id="auth-email" type="email" required autocomplete="email" placeholder="name@example.com" class="mt-1 w-full border rounded-lg p-2.5"></label><label class="block text-sm font-semibold">পাসওয়ার্ড<input id="auth-password" type="password" required minlength="8" autocomplete="current-password" placeholder="কমপক্ষে ৮ অক্ষর" class="mt-1 w-full border rounded-lg p-2.5"></label><div id="auth-confirm-wrap" class="hidden"><label class="block text-sm font-semibold">পাসওয়ার্ড নিশ্চিত করুন<input id="auth-confirm-password" type="password" minlength="8" autocomplete="new-password" placeholder="আবার পাসওয়ার্ড লিখুন" class="mt-1 w-full border rounded-lg p-2.5"></label></div><button type="submit" class="w-full rounded-lg bg-emerald-700 text-white py-3 font-bold" id="auth-submit-label">লগইন করুন</button></form><div class="relative my-4"><div class="border-t"></div><span class="absolute left-1/2 -translate-x-1/2 -top-3 bg-white px-3 text-xs text-slate-500">অথবা</span></div><button type="button" onclick="demoGoogleSignIn()" class="w-full border border-slate-300 rounded-lg py-3 font-bold text-slate-700 flex items-center justify-center gap-3"><i class="fa-brands fa-google text-red-500"></i> Sign in with Google</button><p class="mt-3 text-[11px] text-slate-500">Email অথবা Google—দুইভাবেই একই অ্যাকাউন্ট ড্যাশবোর্ড ব্যবহার করতে পারবেন।</p></div></div>
+<div id="account-dashboard" class="hidden fixed inset-0 z-[111] bg-slate-950/70 items-center justify-center p-4"><div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-5 max-h-[90dvh] overflow-y-auto"><div class="flex items-center justify-between mb-4"><h3 class="text-lg font-extrabold">আমার অ্যাকাউন্ট</h3><button type="button" onclick="closeAccountDashboard()" class="text-slate-500 text-2xl">&times;</button></div><div class="flex items-center gap-3 rounded-xl bg-emerald-50 p-3 mb-4"><div class="w-12 h-12 rounded-full bg-emerald-700 text-white flex items-center justify-center text-xl"><i class="fa-solid fa-user"></i></div><div class="min-w-0"><div id="account-user-name" class="font-bold truncate">ব্যবহারকারী</div><div id="account-user-email" class="text-sm text-slate-600 truncate"></div><span class="inline-flex mt-1 text-xs font-bold text-emerald-700">● Logged in</span></div></div><section class="rounded-xl border border-slate-200 p-4 mb-4" aria-live="polite"><div class="flex items-center justify-between gap-2"><h4 class="font-extrabold text-slate-900"><i class="fa-solid fa-shield-halved text-emerald-700 mr-1"></i> NID Verification Status</h4><span id="account-nid-status-badge" class="text-xs font-extrabold rounded-full px-3 py-1 bg-slate-100 text-slate-700">লোড হচ্ছে…</span></div><p id="account-nid-status-message" class="text-sm text-slate-600 mt-2">আপনার NID যাচাইয়ের অবস্থা দেখা হচ্ছে…</p><button id="account-nid-action" type="button" onclick="closeAccountDashboard();switchTab('owner-verification')" class="hidden mt-3 w-full rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-800 py-2 font-bold">NID Verification আবেদন / বিস্তারিত</button></section><div class="flex items-center justify-between gap-2 mb-2"><div class="text-sm text-slate-600">তোমার বিজ্ঞাপন: <b id="account-ad-count">লোড হচ্ছে…</b></div><button type="button" onclick="loadOwnerProperties()" class="text-xs font-bold text-emerald-700"><i class="fa-solid fa-rotate"></i> রিফ্রেশ</button></div><div id="owner-removal-requests" class="mb-4"></div><div id="account-properties-list" class="space-y-3 mb-4"><p class="text-sm text-slate-500 text-center py-4">বিজ্ঞাপন লোড হচ্ছে…</p></div><button type="button" onclick="closeAccountDashboard();switchTab('post-ad')" class="w-full border border-emerald-200 bg-emerald-50 text-emerald-800 rounded-lg py-2.5 mb-2 font-bold"><i class="fa-solid fa-plus mr-1"></i> নতুন বিজ্ঞাপন পোস্ট করুন</button><button type="button" id="account-admin-entry" onclick="openAdminPanel()" class="hidden w-full rounded-lg bg-slate-900 text-white py-3 font-bold mb-2"><i class="fa-solid fa-shield-halved mr-2"></i>Admin Dashboard</button><button type="button" onclick="ownerLogout()" class="w-full rounded-lg bg-red-600 text-white py-3 font-bold">Logout</button></div></div>
+
+    <div id="removal-request-modal" class="hidden fixed inset-0 z-[100] bg-slate-950/70 items-center justify-center p-4"><div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-5"><div class="flex items-center justify-between mb-3"><h3 class="text-lg font-extrabold text-slate-900">বিজ্ঞাপন সরানোর অনুরোধ</h3><button type="button" onclick="closeRemovalRequest()" class="text-slate-500 text-2xl">&times;</button></div><p class="text-sm text-slate-600 mb-4">অনুরোধটি যাচাই করা হবে। অনুরোধ পাঠালেই বিজ্ঞাপন মুছে যাবে না।</p><form id="removal-request-form" onsubmit="submitRemovalRequest(event)" class="space-y-3"><label class="block text-sm font-semibold">আপনার নাম<input id="requester-name" required class="mt-1 w-full border rounded-lg p-2.5" maxlength="80"></label><label class="block text-sm font-semibold">মোবাইল নম্বর<input id="requester-phone" required type="tel" class="mt-1 w-full border rounded-lg p-2.5" maxlength="20" placeholder="01XXXXXXXXX"></label><label class="block text-sm font-semibold">কারণ<select id="request-reason" required class="mt-1 w-full border rounded-lg p-2.5"><option value="">কারণ নির্বাচন করুন</option><option>বাসাটি ভাড়া হয়ে গেছে</option><option>ভুল বা বিভ্রান্তিকর তথ্য</option><option>বিজ্ঞাপনটি মেয়াদোত্তীর্ণ</option><option>অন্যান্য</option></select></label><label class="block text-sm font-semibold">বিস্তারিত (ঐচ্ছিক)<textarea id="request-details" rows="3" class="mt-1 w-full border rounded-lg p-2.5" maxlength="500"></textarea></label><div class="flex gap-2 justify-end"><button type="button" onclick="closeRemovalRequest()" class="px-4 py-2 rounded-lg bg-slate-100">বাতিল</button><button type="submit" class="px-4 py-2 rounded-lg bg-emerald-700 text-white font-bold">অনুরোধ পাঠান</button></div></form></div></div><div id="photo-lightbox" class="hidden fixed inset-0 z-[80] bg-black/95 items-center justify-center p-3" onclick="closePhotoLightbox()"><button class="absolute top-4 right-5 text-white text-3xl">×</button><button class="absolute left-3 sm:left-8 text-white text-4xl" onclick="event.stopPropagation();stepLightbox(-1)">‹</button><img id="lightbox-image" src="" alt="বাসার ছবি" class="max-w-full max-h-[88vh] object-contain rounded-lg" onclick="event.stopPropagation()"><button class="absolute right-3 sm:right-8 text-white text-4xl" onclick="event.stopPropagation();stepLightbox(1)">›</button><div id="lightbox-counter" class="absolute bottom-4 text-white text-sm"></div></div>
+    <!-- Admin dashboard: visibility is granted only after server-side role verification -->
+    <section id="tab-admin" class="tab-page hidden py-8">
+      <div class="container mx-auto px-4 max-w-6xl">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+          <div><span class="text-xs font-bold text-emerald-700">TO-LET BD / ADMIN</span><h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900">Admin Dashboard</h1><p class="text-sm text-slate-500">NID যাচাই, বিজ্ঞাপন ও ব্যবহারকারী পরিচালনা</p></div>
+          <button onclick="switchTab('home')" class="px-4 py-2 rounded-xl border bg-white font-bold text-sm">সাইটে ফিরে যান</button>
+        </div>
+        <div id="admin-status" class="rounded-xl bg-slate-100 p-4 text-sm text-slate-700 mb-4">Admin permission যাচাই হচ্ছে…</div>
+        <div id="admin-content" class="hidden space-y-5">
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="admin-stats">
+            <div class="bg-white border rounded-2xl p-4"><div class="text-xs text-slate-500">Pending NID</div><b id="admin-stat-nid" class="text-2xl">—</b></div>
+            <div class="bg-white border rounded-2xl p-4"><div class="text-xs text-slate-500">Pending বিজ্ঞাপন</div><b id="admin-stat-ads" class="text-2xl">—</b></div>
+            <div class="bg-white border rounded-2xl p-4"><div class="text-xs text-slate-500">মোট ব্যবহারকারী প্রোফাইল</div><b id="admin-stat-users" class="text-2xl">—</b></div>
+            <div class="bg-white border rounded-2xl p-4"><div class="text-xs text-slate-500">মোট বিজ্ঞাপন</div><b id="admin-stat-properties" class="text-2xl">—</b></div>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button class="admin-tab-btn px-4 py-2 rounded-lg bg-emerald-700 text-white font-bold" onclick="showAdminSection('nid')">NID আবেদন</button>
+            <button class="admin-tab-btn px-4 py-2 rounded-lg bg-white border font-bold" onclick="showAdminSection('ads')">বিজ্ঞাপন</button>
+            <button class="admin-tab-btn px-4 py-2 rounded-lg bg-white border font-bold" onclick="showAdminSection('users')">ব্যবহারকারী</button>
+            <button class="admin-tab-btn px-4 py-2 rounded-lg bg-white border font-bold" onclick="showAdminSection('settings')">ওয়েবসাইট সেটিংস</button>
+          </div>
+          <div id="admin-section-nid" class="bg-white border rounded-2xl p-4 sm:p-6">
+            <div class="flex justify-between items-center gap-3 mb-4"><h2 class="text-xl font-extrabold">NID Verification আবেদন</h2><button onclick="loadAdminData()" class="text-sm text-emerald-700 font-bold">রিফ্রেশ</button></div>
+            <div id="admin-nid-filters" class="flex flex-wrap gap-2 mb-4"></div><div id="admin-nid-list" class="space-y-3">লোড হচ্ছে…</div>
+            <div id="admin-nid-detail" class="hidden mt-5 border-t pt-5"></div>
+          </div>
+          <div id="admin-section-ads" class="hidden bg-white border rounded-2xl p-4 sm:p-6"><div class="flex flex-wrap items-center justify-between gap-3 mb-4"><h2 class="text-xl font-extrabold">বিজ্ঞাপন Moderation</h2><button onclick="loadAdminData()" class="text-sm text-emerald-700 font-bold"><i class="fa-solid fa-rotate mr-1"></i>রিফ্রেশ</button></div><p class="text-sm text-slate-500 mb-3">বিজ্ঞাপনগুলো তাদের বর্তমান Status অনুযায়ী আলাদা ক্যাটাগরিতে দেখুন। প্রতিটি বিজ্ঞাপনে Status Tag দেওয়া আছে।</p><div id="admin-ad-filters" class="flex flex-wrap gap-2 mb-4"></div><div id="admin-ads-list" class="space-y-3">লোড হচ্ছে…</div><div class="mt-6 border-t pt-5"><h3 class="font-extrabold text-lg mb-3">বিজ্ঞাপন সরানোর অনুরোধ</h3><div id="admin-removal-requests" class="space-y-3">লোড হচ্ছে…</div></div></div>
+          <div id="admin-section-users" class="hidden bg-white border rounded-2xl p-4 sm:p-6"><h2 class="text-xl font-extrabold mb-4">ব্যবহারকারী প্রোফাইল</h2><div id="admin-users-list" class="space-y-2">লোড হচ্ছে…</div></div>
+          <div id="admin-section-settings" class="hidden bg-white border rounded-2xl p-4 sm:p-6">
+            <h2 class="text-xl font-extrabold mb-4">ওয়েবসাইট সেটিংস</h2>
+            <form id="admin-settings-form" class="grid sm:grid-cols-2 gap-3" onsubmit="saveAdminSettings(event)">
+              <label class="text-sm font-semibold">About<textarea id="set-about" rows="3" class="mt-1 w-full border rounded-lg p-2"></textarea></label>
+              <label class="text-sm font-semibold">Support Email<input id="set-email" type="email" class="mt-1 w-full border rounded-lg p-2"></label>
+              <label class="text-sm font-semibold">Phone<input id="set-phone" class="mt-1 w-full border rounded-lg p-2"></label>
+              <label class="text-sm font-semibold">Address<input id="set-address" class="mt-1 w-full border rounded-lg p-2"></label>
+              <label class="text-sm font-semibold">Support Hours<input id="set-hours" class="mt-1 w-full border rounded-lg p-2"></label>
+              <label class="text-sm font-semibold">Facebook URL<input id="set-facebook" type="url" class="mt-1 w-full border rounded-lg p-2"></label>
+              <label class="text-sm font-semibold sm:col-span-2">Copyright<input id="set-copyright" class="mt-1 w-full border rounded-lg p-2"></label>
+              <button class="sm:col-span-2 bg-emerald-700 text-white rounded-xl py-3 font-bold">সেটিংস সংরক্ষণ করুন</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Editable Contact Footer -->
+    <footer class="bg-slate-950 text-slate-300 py-10 border-t border-slate-800">
+      <div class="container mx-auto px-4 max-w-6xl grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div><span class="text-xl font-extrabold text-white">টু-লেট BD</span><p id="footer-about" class="text-sm text-slate-400 mt-3">বাংলাদেশে বাসা, ফ্ল্যাট ও বাণিজ্যিক জায়গা খুঁজুন সহজে।</p></div>
+        <div><h3 class="font-bold text-white mb-3">দ্রুত লিংক</h3><div class="grid gap-2 text-sm"><a href="javascript:void(0)" onclick="switchTab('home')" class="hover:text-emerald-300">হোম</a><a href="javascript:void(0)" onclick="switchTab('listings')" class="hover:text-emerald-300">সব বিজ্ঞাপন</a><a href="javascript:void(0)" onclick="switchTab('post-ad')" class="hover:text-emerald-300">বিজ্ঞাপন দিন</a></div></div>
+        <div><h3 class="font-bold text-white mb-3">যোগাযোগ</h3><div class="grid gap-3 text-sm"><a id="footer-email-link" href="#" class="flex gap-2 items-center hover:text-emerald-300"><i class="fa-solid fa-envelope text-emerald-400"></i><span id="footer-email">ইমেইল Admin Panel থেকে যুক্ত হবে</span></a><a id="footer-phone-link" href="#" class="flex gap-2 items-center hover:text-emerald-300"><i class="fa-solid fa-phone text-emerald-400"></i><span id="footer-phone">ফোন নম্বর Admin Panel থেকে যুক্ত হবে</span></a><a id="footer-facebook-link" href="#" target="_blank" rel="noopener" class="hidden gap-2 items-center hover:text-emerald-300"><i class="fa-brands fa-facebook text-emerald-400"></i>Facebook Page</a></div></div>
+        <div><h3 class="font-bold text-white mb-3">তথ্য</h3><p id="footer-address" class="text-sm text-slate-400">বাংলাদেশ</p><p id="footer-hours" class="text-sm text-slate-400 mt-2">সাপোর্ট সময়: প্রতিদিন</p></div>
+      </div><div class="container mx-auto px-4 max-w-6xl border-t border-slate-800 mt-8 pt-5 text-xs text-slate-500 flex flex-col sm:flex-row justify-between gap-2"><span id="footer-copyright">© 2026 To-Let BD. All Rights Reserved.</span><span>Made for Bangladesh</span></div>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <!-- JAVASCRIPT APP LOGIC -->
+    <script>
+        // Live property store: no built-in/demo advertisements.
+        let properties = [];
+
+
+        // Bangladesh location hierarchy loaded from a structured division/district/upazila/union dataset.
+        const BD_LOCATION_URL='https://iqbalhasandev.github.io/bangladesh-geo-json/bangladesh-geo.json';
+        let bdLocations=[];
+        const byId=id=>document.getElementById(id);
+        function fillGeoSelect(el,items,placeholder){if(!el)return;el.innerHTML='';const first=document.createElement('option');first.value='';first.textContent=placeholder;el.appendChild(first);items.forEach((item,i)=>{const o=document.createElement('option');o.value=String(i);o.textContent=item.bn_name||item.name||item;el.appendChild(o)});el.disabled=!items.length;}
+        function geoName(item){return item?.bn_name||item?.name||'';}
+        async function loadBangladeshGeo(){
+          try{const res=await fetch(BD_LOCATION_URL);if(!res.ok)throw new Error('Location data unavailable');bdLocations=await res.json();
+            fillGeoSelect(byId('home-division'),bdLocations,'সকল বিভাগ');
+            byId('home-division').addEventListener('change',()=>{const d=bdLocations[Number(byId('home-division').value)];fillGeoSelect(byId('home-district'),d?.districts||[],'সকল জেলা');fillGeoSelect(byId('home-upazila'),[],'আগে জেলা নির্বাচন করুন');fillGeoSelect(byId('home-area'),[],'আগে উপজেলা নির্বাচন করুন');filterHomeCards();});
+            byId('home-district').addEventListener('change',()=>{const d=bdLocations[Number(byId('home-division').value)],z=d?.districts?.[Number(byId('home-district').value)];fillGeoSelect(byId('home-upazila'),z?.upazilas||[],'সকল উপজেলা');fillGeoSelect(byId('home-area'),[],'আগে উপজেলা নির্বাচন করুন');filterHomeCards();});
+            byId('home-upazila').addEventListener('change',()=>{const d=bdLocations[Number(byId('home-division').value)],z=d?.districts?.[Number(byId('home-district').value)],u=z?.upazilas?.[Number(byId('home-upazila').value)];const areas=[...(u?.unions||[]),...(u?.pourashavas||[])];fillGeoSelect(byId('home-area'),areas,'সকল ইউনিয়ন / পৌরসভা / ওয়ার্ড');filterHomeCards();});
+          }catch(e){console.warn('বাংলাদেশের লোকেশন ডেটা লোড হয়নি',e);byId('home-division').innerHTML='<option value="">লোকেশন তালিকা লোড হয়নি</option>';byId('home-division').disabled=true;}
+        }
+        function selectedGeo(selectId,parentPath){const el=byId(selectId);return el&&el.selectedIndex>0?el.options[el.selectedIndex].text:'';}
+        function resetGeoFilters(){['home-division','home-district','home-upazila','home-area'].forEach((id,i)=>{const el=byId(id);el.value='';if(i===1){el.innerHTML='<option value="">আগে বিভাগ নির্বাচন করুন</option>';el.disabled=true;}if(i===2){el.innerHTML='<option value="">আগে জেলা নির্বাচন করুন</option>';el.disabled=true;}if(i===3){el.innerHTML='<option value="">আগে উপজেলা নির্বাচন করুন</option>';el.disabled=true;}});}
+
+        properties.forEach((p,i)=>{if(!p.createdAt)p.createdAt=new Date(Date.now()-i*86400000).toISOString();if(!p.images)p.images=[p.image,'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=900&q=80','https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=900&q=80','https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=900&q=80'];if(!p.adStatus)p.adStatus='available';})
+        function formatPublished(value){const d=new Date(value);return isNaN(d)?'প্রকাশের সময় পাওয়া যায়নি':'প্রকাশিত: '+d.toLocaleDateString('bn-BD',{day:'numeric',month:'long',year:'numeric'})+' • '+d.toLocaleTimeString('bn-BD',{hour:'2-digit',minute:'2-digit'});}
+        function refreshAreaOptions(){}
+        function resetHomeFilters(){resetGeoFilters();nearbySearchActive=false;userGpsPosition=null;const gpsStatus=document.getElementById('nearby-status');if(gpsStatus)gpsStatus.textContent='আপনার অবস্থান অনুমতি দিলে কাছাকাছি বাসা, ফ্ল্যাট ও হোটেল দেখাবে।';document.getElementById('home-min-price').value='';document.getElementById('home-filter-price').value='all';document.getElementById('home-sort').value='new';homeCity='';document.querySelectorAll('.home-city-chips button').forEach((b,i)=>b.classList.toggle('active',i===0));filterHomeCards();}
+        function persistProperties(){try{localStorage.setItem('toletbd_properties_v3',JSON.stringify(properties));}catch(e){}}
+        function openRemovalRequest(){const m=byId('removal-request-modal');m.classList.remove('hidden');m.classList.add('flex');}
+        function closeRemovalRequest(){const m=byId('removal-request-modal');m.classList.add('hidden');m.classList.remove('flex');}
+        async function submitRemovalRequest(e){
+          e.preventDefault();const p=properties.find(x=>String(x.id)===String(activePropertyId));
+          if(!p){alert('বিজ্ঞাপনটি পাওয়া যায়নি।');return;}
+          if(!window.toletSupabase){alert('সার্ভার সংযোগ নেই।');return;}
+          const btn=byId('removal-request-form').querySelector('button[type="submit"]');btn.disabled=true;btn.textContent='পাঠানো হচ্ছে…';
+          try{
+            const {data:{user}}=await toletSupabase.auth.getUser();
+            const {error}=await toletSupabase.from('property_removal_requests').insert({
+              property_id:p.id,owner_id:p.owner_id||null,requester_user_id:user?.id||null,
+              requester_name:byId('requester-name').value.trim(),requester_phone:byId('requester-phone').value.trim(),
+              reason:byId('request-reason').value,details:byId('request-details').value.trim(),status:'pending'
+            });
+            if(error)throw error;closeRemovalRequest();byId('removal-request-form').reset();
+            alert('অনুরোধটি জমা হয়েছে। বিজ্ঞাপনের মালিক ও Admin—দুইজনই এটি দেখতে পারবেন।');
+          }catch(err){alert('অনুরোধ পাঠানো যায়নি: '+(err.message||err));}
+          finally{btn.disabled=false;btn.textContent='অনুরোধ পাঠান';}
+        }
+        function openPhotoLightbox(index){lightboxIndex=index;const box=document.getElementById('photo-lightbox');box.classList.remove('hidden');box.classList.add('flex');updateLightbox();}
+        function updateLightbox(){document.getElementById('lightbox-image').src=lightboxImages[lightboxIndex]||'';document.getElementById('lightbox-counter').textContent=`${lightboxIndex+1} / ${lightboxImages.length}`;}
+        function stepLightbox(delta){if(!lightboxImages.length)return;lightboxIndex=(lightboxIndex+delta+lightboxImages.length)%lightboxImages.length;updateLightbox();}
+        function closePhotoLightbox(){const box=document.getElementById('photo-lightbox');box.classList.add('hidden');box.classList.remove('flex');}
+
+        // Mobile category strip: show a chevron when more categories are available horizontally.
+        function updateCategoryCue(){
+            const strip=document.getElementById('home-type-tabs');
+            const cue=document.getElementById('category-more-cue');
+            if(!strip||!cue)return;
+            const hasMore=strip.scrollWidth>strip.clientWidth+4;
+            const atEnd=strip.scrollLeft+strip.clientWidth>=strip.scrollWidth-6;
+            // Keep a clear, labeled hint visible on first entry; hide only after reaching the end.
+            cue.classList.toggle('visible',hasMore&&!atEnd);
+        }
+        function scrollHomeCategories(){
+            const strip=document.getElementById('home-type-tabs');
+            if(strip)strip.scrollBy({left:Math.max(180,strip.clientWidth*.72),behavior:'smooth'});
+        }
+        window.addEventListener('resize',updateCategoryCue);
+        window.addEventListener('load',()=>{updateCategoryCue();setTimeout(updateCategoryCue,350);});
+        window.addEventListener('load',()=>{loadOwnerSession();loadOwnerProperties();loadApprovedDatabaseProperties();});
+        if(window.toletSupabase){toletSupabase.auth.onAuthStateChange((_event,session)=>{window.toletOwnerSession=session;loadOwnerSession().then(()=>{if(document.getElementById('account-dashboard')&&!document.getElementById('account-dashboard').classList.contains('hidden'))renderAccountDashboard();});});}
+
+        // Capture home clicks before any other page handlers can interfere.
+        document.addEventListener('click', function(ev) {
+            const homeTrigger = ev.target.closest('a[href="#home"], #nav-home');
+            if (homeTrigger) navigateHome(ev);
+        }, true);
+
+        // State Flags
+        let detailsMapInstance = null;
+        let postMapInstance = null;
+        let postMarkerInstance = null;
+        let activePropertyId = null;
+        let lightboxImages = [];
+        let lightboxIndex = 0;
+
+        // Initialize on Load
+        window.addEventListener('load', () => {
+            loadBangladeshGeo();
+            const categorySelect=document.getElementById('post-category');
+            if(categorySelect){const updatePriceLabel=()=>{const hotel=categorySelect.value==='Hotel';document.getElementById('post-price-label').textContent=hotel?'প্রতি রাতের রুম ভাড়া (৳)':'মাসিক ভাড়া (৳)';document.getElementById('post-price').placeholder=hotel?'২৫০০':'১৫০০০';};categorySelect.addEventListener('change',updatePriceLabel);updatePriceLabel();}
+            const savedProps=localStorage.getItem('toletbd_properties_v3');if(savedProps){try{const cached=JSON.parse(savedProps);properties=Array.isArray(cached)?cached.filter(p=>!([1,2,3,4].includes(Number(p.id))&&!p.source)):[];localStorage.setItem('toletbd_properties_v3',JSON.stringify(properties));}catch(e){properties=[];}}
+            properties.forEach((p,i)=>{if(!p.createdAt)p.createdAt=new Date(Date.now()-i*86400000).toISOString();if(!p.images)p.images=[p.image,'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=900&q=80','https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=900&q=80','https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=900&q=80'];if(!p.adStatus)p.adStatus='available';});refreshAreaOptions();
+            ['home-area','home-min-price','home-filter-price','home-sort'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.addEventListener('input', filterHomeCards);
+                if (el && el.tagName === 'SELECT') el.addEventListener('change', filterHomeCards);
+            });
+            renderHomeProperties();
+            renderAllListingsPage();
+            initPostMapPicker();
+            initPostLocationCascade();
+            loadPostLocations();
+            setupMediaPreviews();
+        });
+
+        // Home navigation: return to a clean homepage even after a zero-result search.
+        function navigateHome(event) {
+            if (event) { event.preventDefault(); event.stopPropagation(); }
+            try {
+                const searchBox = document.getElementById('home-search-text');
+                if (searchBox) searchBox.value = '';
+                if (typeof resetHomeFilters === 'function') resetHomeFilters();
+                if (typeof homeCategory !== 'undefined') {
+                    homeCategory = 'all';
+                    document.querySelectorAll('.home-type').forEach((b,i)=>b.classList.toggle('active',i===0));
+                }
+                if (typeof homeCity !== 'undefined') homeCity = '';
+                if (typeof filterHomeCards === 'function') filterHomeCards();
+            } catch (err) { console.warn('Home reset issue:', err); }
+            switchTab('home');
+            const home = document.getElementById('tab-home');
+            if (home) {
+                document.querySelectorAll('.tab-page').forEach(page => {
+                    page.classList.add('hidden');
+                    page.style.setProperty('display','none','important');
+                    page.setAttribute('aria-hidden','true');
+                });
+                home.classList.remove('hidden');
+                home.style.setProperty('display','block','important');
+                home.setAttribute('aria-hidden','false');
+            }
+            window.scrollTo(0,0);
+            setTimeout(updateCategoryCue, 80);
+            return false;
+        }
+
+        // Tab Switcher
+        function switchTab(tabId) {
+            // Robust SPA navigation: explicitly hide every page, then reveal the requested page.
+            const pages = document.querySelectorAll('.tab-page');
+            pages.forEach(page => {
+                // Clear stale inline display overrides (navigateHome previously used !important).
+                page.style.removeProperty('display');
+                page.classList.add('hidden');
+                page.setAttribute('aria-hidden', 'true');
+            });
+            const target = document.getElementById(`tab-${tabId}`);
+            if (!target) {
+                console.warn('Page not found:', tabId);
+                return false;
+            }
+            target.style.removeProperty('display');
+            target.classList.remove('hidden');
+            target.setAttribute('aria-hidden', 'false');
+
+            // Keep navigation state and browser position in sync.
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.setAttribute('aria-current', 'false');
+            });
+
+            // Nav link active highlights
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('bg-white', 'text-emerald-700', 'shadow-sm');
+                link.classList.add('text-slate-600');
+            });
+
+            const activeNav = document.getElementById(`nav-${tabId}`);
+            if (activeNav) {
+                activeNav.classList.add('bg-white', 'text-emerald-700', 'shadow-sm');
+                activeNav.classList.remove('text-slate-600');
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            if (tabId === 'home') {
+                // Home always returns to the homepage even after a filtered search.
+                const searchBox = document.getElementById('home-search-text');
+                if (searchBox) searchBox.blur();
+            }
+            if (tabId === 'post-ad' && postMapInstance) {
+                setTimeout(() => postMapInstance.invalidateSize(), 300);
+            }
+            return false;
+        }
+
+        <!-- Render Home Approved Properties -->
+        let homeCategory = 'all';
+        let homeCity = '';
+        let userGpsPosition = null;
+        let nearbySearchActive = false;
+        function renderHomeProperties() { filterHomeCards(); }
+        function setHomeCategory(category, button) {
+            homeCategory = category;
+            document.querySelectorAll('.home-type').forEach(b => b.classList.remove('active'));
+            if (button) button.classList.add('active');
+            filterHomeCards();
+        }
+        function setHomeCity(city, button) {
+            homeCity = city;
+            document.querySelectorAll('.home-city-chips button').forEach(b => b.classList.remove('active'));
+            if (button) button.classList.add('active');
+            filterHomeCards();
+        }
+        function distanceKm(lat1, lon1, lat2, lon2) {
+            const toRad = v => v * Math.PI / 180;
+            const R = 6371;
+            const dLat = toRad(lat2-lat1), dLon = toRad(lon2-lon1);
+            const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;
+            return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        }
+        function validateBrowserLocation(position){
+            const c=position&&position.coords,lat=Number(c?.latitude),lng=Number(c?.longitude),accuracy=Number(c?.accuracy);
+            if(!Number.isFinite(lat)||!Number.isFinite(lng)||Math.abs(lat)>90||Math.abs(lng)>180)throw new Error('অবস্থানটি সঠিকভাবে পাওয়া যায়নি।');
+            return {lat,lng,accuracy:Number.isFinite(accuracy)?accuracy:null};
+        }
+        function getBrowserLocation(onSuccess,onError){
+            if(!navigator.geolocation){onError(new Error('এই ব্রাউজারে Location সুবিধা নেই।'));return;}
+            navigator.geolocation.getCurrentPosition(pos=>{try{onSuccess(validateBrowserLocation(pos));}catch(e){onError(e);}},err=>{
+                const msg={1:'Location permission Blocked। Chrome-এর address bar থেকে Location Allow করুন।',2:'অবস্থান পাওয়া যায়নি। Wi-Fi চালু রেখে আবার চেষ্টা করুন।',3:'অবস্থান পেতে সময় শেষ হয়েছে। আবার চেষ্টা করুন।'};
+                onError(new Error(msg[err.code]||'অবস্থান পাওয়া যায়নি।'));
+            },{enableHighAccuracy:true,timeout:30000,maximumAge:0});
+        }
+        function locationAccuracyText(m){return m==null?'নির্ভুলতা অজানা':m<100?`প্রায় ${Math.round(m)} মিটার`:`প্রায় ${(m/1000).toFixed(1)} কিমি`}
+        function searchNearbyProperties() {
+            const status=byId('nearby-status');status.textContent='আপনার অবস্থান নেওয়া হচ্ছে…';
+            getBrowserLocation(pos=>{
+                userGpsPosition=pos;nearbySearchActive=true;homeCity='';
+                document.querySelectorAll('.home-city-chips button').forEach((b,i)=>b.classList.toggle('active',i===0));resetGeoFilters();
+                status.textContent=pos.accuracy!=null&&pos.accuracy>500?`অবস্থানটি আনুমানিক (${locationAccuracyText(pos.accuracy)})। কাছাকাছি ফলাফল ভুল হতে পারে—ম্যাপে নিজের অবস্থান যাচাই করুন।`:`আপনার অবস্থান পাওয়া গেছে (নির্ভুলতা ${locationAccuracyText(pos.accuracy)})।`;
+                filterHomeCards();byId('nearby-map-panel').classList.remove('hidden');initNearbyMap();
+            },err=>{status.textContent=err.message;});
+        }
+        function clearNearbySearch() {
+            nearbySearchActive = false; userGpsPosition = null;
+            const status=document.getElementById('nearby-status');
+            if(status)status.textContent='GPS সার্চ বন্ধ। এখন সব এলাকার বিজ্ঞাপন দেখানো হচ্ছে।';
+            filterHomeCards();
+        }
+
+        // Interactive OpenStreetMap: GPS + listing markers + explicit place search.
+        let nearbyLeafletMap=null, nearbyMapMarkers=[], nearbySearchMarker=null;
+        function toggleNearbyMap(){const panel=byId('nearby-map-panel');panel.classList.toggle('hidden');if(!panel.classList.contains('hidden')){initNearbyMap();setTimeout(()=>nearbyLeafletMap&&nearbyLeafletMap.invalidateSize(),180);}}
+        function initNearbyMap(){if(typeof L==='undefined'){byId('nearby-status').textContent='ম্যাপ লাইব্রেরি লোড হয়নি; ইন্টারনেট সংযোগ পরীক্ষা করুন।';return;}if(!nearbyLeafletMap){nearbyLeafletMap=L.map('nearby-map').setView([23.685,90.3563],7);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(nearbyLeafletMap);}refreshNearbyMapMarkers();}
+        function getPropertyCoords(p){const lat=Number(p?.lat??p?.latitude),lng=Number(p?.lng??p?.longitude);return Number.isFinite(lat)&&Number.isFinite(lng)&&Math.abs(lat)<=90&&Math.abs(lng)<=180&&(p?.lat??p?.latitude)!=null&&(p?.lng??p?.longitude)!=null?{lat,lng}:null;}
+        function refreshNearbyMapMarkers(items){if(!nearbyLeafletMap)return;nearbyMapMarkers.forEach(m=>nearbyLeafletMap.removeLayer(m));nearbyMapMarkers=[];if(nearbySearchMarker){nearbyLeafletMap.removeLayer(nearbySearchMarker);nearbySearchMarker=null;}const list=items||properties.filter(p=>p.status==='approved');list.forEach(p=>{const c=getPropertyCoords(p);if(!c)return;const marker=L.marker([c.lat,c.lng]).addTo(nearbyLeafletMap).bindPopup(`<b>${escapeMapText(p.title||'ভাড়ার বিজ্ঞাপন')}</b><br>${escapeMapText(p.location||'')}<br>৳${Number(p.price||0).toLocaleString('bn-BD')}`);nearbyMapMarkers.push(marker);});if(userGpsPosition){const you=L.circleMarker([userGpsPosition.lat,userGpsPosition.lng],{radius:9,color:'#2563eb',fillColor:'#60a5fa',fillOpacity:.9}).addTo(nearbyLeafletMap).bindPopup(`আপনার অবস্থান · নির্ভুলতা ${locationAccuracyText(userGpsPosition.accuracy)}`);nearbyMapMarkers.push(you);nearbyLeafletMap.setView([userGpsPosition.lat,userGpsPosition.lng],13);}else if(nearbyMapMarkers.length){nearbyLeafletMap.fitBounds(L.featureGroup(nearbyMapMarkers).getBounds().pad(.18));}}
+        function escapeMapText(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+        async function geocodeBangladeshPlace(query){const url='https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=bd&q='+encodeURIComponent(query+', Bangladesh');const r=await fetch(url,{headers:{'Accept':'application/json'}});if(!r.ok)throw new Error('search unavailable');const data=await r.json();if(!data.length)throw new Error('এই নামে জায়গা পাওয়া যায়নি।');return data[0];}
+        async function searchMapPlace(e){e.preventDefault();const q=byId('map-place-query').value.trim();if(!q)return;const status=byId('nearby-status');status.textContent='ম্যাপে জায়গাটি খোঁজা হচ্ছে…';try{const place=await geocodeBangladeshPlace(q),lat=Number(place.lat),lng=Number(place.lon);byId('nearby-map-panel').classList.remove('hidden');initNearbyMap();if(nearbySearchMarker)nearbyLeafletMap.removeLayer(nearbySearchMarker);nearbySearchMarker=L.marker([lat,lng]).addTo(nearbyLeafletMap).bindPopup(escapeMapText(place.display_name)).openPopup();nearbyLeafletMap.setView([lat,lng],15);setTimeout(()=>nearbyLeafletMap.invalidateSize(),100);status.textContent='সার্চ করা জায়গাটি ম্যাপে দেখানো হয়েছে।';}catch(err){status.textContent=err.message||'জায়গা খোঁজা যায়নি। পরে আবার চেষ্টা করুন।';}}
+        async function applyContactSettings(){
+          let cfg={};
+          try{
+            if(window.toletSupabase){
+              const {data,error}=await window.toletSupabase.from('site_settings').select('key,value');
+              if(!error) cfg=Object.fromEntries((data||[]).map(x=>[x.key,x.value]));
+            }
+            if(!Object.keys(cfg).length) cfg=JSON.parse(localStorage.getItem('toletbd_site_settings')||'{}');
+          }catch(e){console.warn('Contact settings could not be loaded',e);}
+          const set=(id,val)=>{const el=byId(id);if(el&&val)el.textContent=val;};
+          set('footer-about',cfg.about);set('footer-email',cfg.email);set('footer-phone',cfg.phone);set('footer-address',cfg.address);set('footer-hours',cfg.hours);set('footer-copyright',cfg.copyright);
+          if(cfg.email&&byId('footer-email-link'))byId('footer-email-link').href='mailto:'+cfg.email;
+          if(cfg.phone&&byId('footer-phone-link'))byId('footer-phone-link').href='tel:'+cfg.phone.replace(/[^+0-9]/g,'');
+          if(cfg.facebook&&byId('footer-facebook-link')){byId('footer-facebook-link').href=cfg.facebook;byId('footer-facebook-link').classList.remove('hidden');byId('footer-facebook-link').classList.add('flex');}
+        }
+        document.addEventListener('DOMContentLoaded',applyContactSettings);
+
+        function filterHomeCards() {
+            const grid = document.getElementById('home-properties-grid');
+            if (!grid) return;
+            const q = (document.getElementById('home-search-text')?.value || '').trim().toLowerCase();
+            const area = (document.getElementById('home-area')?.value || '').trim().toLowerCase();
+            const upazila = selectedGeo('home-upazila').toLowerCase();
+            const division = selectedGeo('home-division').toLowerCase();
+            const district = selectedGeo('home-district').toLowerCase();
+            const min = Number(document.getElementById('home-min-price')?.value || 0);
+            const maxValue = document.getElementById('home-filter-price')?.value || 'all';
+            const max = maxValue === 'all' ? Infinity : Number(maxValue);
+            const sort = document.getElementById('home-sort')?.value || 'new';
+            let items = properties.filter(p => p.status === 'approved');
+            if (homeCategory !== 'all') items = items.filter(p => p.category === homeCategory);
+            if (homeCity) items = items.filter(p => p.location.toLowerCase().includes(homeCity.toLowerCase()));
+            if (q) items = items.filter(p => (p.title+' '+p.location+' '+p.category).toLowerCase().includes(q));
+            if (area) items = items.filter(p => p.location.toLowerCase().includes(area));
+            if (upazila) items = items.filter(p => p.location.toLowerCase().includes(upazila));
+            if (district) items = items.filter(p => p.location.toLowerCase().includes(district));
+            if (division) { const divObj=bdLocations[Number(document.getElementById('home-division').value)]; const distNames=(divObj?.districts||[]).map(x=>geoName(x).toLowerCase()); items=items.filter(p=>distNames.some(n=>p.location.toLowerCase().includes(n))||p.location.toLowerCase().includes(division)); }
+            items = items.filter(p => p.price >= min && p.price <= max);
+            if (nearbySearchActive && userGpsPosition) {
+                const radius = Number(document.getElementById('nearby-radius')?.value || 10);
+                items = items.map(p => {const c=getPropertyCoords(p);return {...p,_distanceKm:c?distanceKm(userGpsPosition.lat,userGpsPosition.lng,c.lat,c.lng):null};})
+                    .filter(p => p._distanceKm !== null && p._distanceKm <= radius)
+                    .sort((a,b)=>a._distanceKm-b._distanceKm);
+            }
+            if (!nearbySearchActive && sort === 'low') items.sort((a,b)=>a.price-b.price);
+            if (!nearbySearchActive && sort === 'high') items.sort((a,b)=>b.price-a.price);
+            grid.innerHTML = items.length ? items.map(createPropertyCardHTML).join('') : '<div class="home-empty"><div style="font-size:34px">⌕</div><b>কোনো বিজ্ঞাপন পাওয়া যায়নি</b><p>ফিল্টার পরিবর্তন করে আবার চেষ্টা করুন।</p></div>';
+            const count=document.getElementById('home-result-count'); if(count) count.textContent=`${items.length}টি বিজ্ঞাপন পাওয়া গেছে`; if(nearbyLeafletMap) refreshNearbyMapMarkers(items);
+        }
+
+        <!-- Render All Listings Page -->
+        function renderAllListingsPage() {
+            const grid = document.getElementById('all-properties-grid');
+            const noItems = document.getElementById('no-listings-found');
+            grid.innerHTML = '';
+
+            const approvedList = properties.filter(p => p.status === 'approved');
+
+            if (approvedList.length === 0) {
+                noItems.classList.remove('hidden');
+                return;
+            } else {
+                noItems.classList.add('hidden');
+            }
+
+            approvedList.forEach(prop => {
+                grid.innerHTML += createPropertyCardHTML(prop);
+            });
+        }
+
+        <!-- Property Card HTML Builder -->
+        function createPropertyCardHTML(prop) {
+            const catNames = {Family:'পরিবারের বাসা', Bachelor:'মেস/হোস্টেল', Sublet:'সাবলেট', Commercial:'অফিস', Hotel:'হোটেল / গেস্ট হাউস'};
+            const priceUnit = prop.category === 'Hotel' ? '/দিন' : '/মাস';
+            return `
+              <article class="home-property-card" role="button" tabindex="0" onclick='openPropertyDetails(${JSON.stringify(String(prop.id))})' onkeydown='if(event.key==="Enter"||event.key===" "){event.preventDefault();openPropertyDetails(${JSON.stringify(String(prop.id))})}'>
+                <div class="home-property-image">
+                  <img src="${prop.image}" alt="${prop.title}" loading="lazy">
+                  <span class="home-property-tag">${catNames[prop.category] || prop.category}</span>
+                  ${prop.verified ? '<span class="home-property-tag" style="left:auto;right:54px;background:#e8f1ff;color:#2454a6">✓ Verified</span>' : ''}
+                  <button class="home-property-fav" aria-label="পছন্দের তালিকায় যোগ করুন" onclick="event.stopPropagation();this.classList.toggle('is-fav');this.innerHTML=this.classList.contains('is-fav')?'♥':'♡'">♡</button>
+                </div>
+                <div class="home-property-body">
+                  <h3 class="home-property-title">${prop.title}</h3>
+                  <div class="home-property-location"><i class="fa-solid fa-location-dot" style="color:#e45b55"></i> ${prop.location}</div>
+                  <div class="home-property-price">৳${Number(prop.price).toLocaleString('bn-BD')} <small>${priceUnit}</small></div>
+                  <div class="home-property-meta"><span>${prop.bedrooms} বেড</span><span>${prop.bathrooms} বাথ</span>${prop.verified ? '<span class="verified">✓ যাচাইকৃত</span>' : ''}${prop.adStatus==='rented' ? '<span style="color:#b45309;font-weight:800">ভাড়া হয়েছে</span>' : ''}${Number.isFinite(prop._distanceKm) ? `<span style="color:#087b6d;font-weight:800"><i class="fa-solid fa-location-dot"></i> ${prop._distanceKm.toFixed(1)} কিমি দূরে</span>` : ''}</div><div class="text-[10px] text-slate-400 mt-2">${formatPublished(prop.createdAt)}</div>
+                </div>
+              </article>`;
+        }
+
+        <!-- Filter & Search Handler -->
+        function applyFilterAndSearch() {
+            const searchText = document.getElementById('home-search-text').value.toLowerCase();
+            const cat = document.getElementById('home-filter-category').value;
+            const maxPrice = document.getElementById('home-filter-price').value;
+
+            switchTab('listings');
+
+            document.getElementById('listing-search').value = searchText;
+            document.getElementById('listing-cat').value = cat;
+
+            filterListingsPage(maxPrice);
+        }
+
+        function filterListingsPage(overridePrice) {
+            const searchVal = document.getElementById('listing-search').value.toLowerCase();
+            const catVal = document.getElementById('listing-cat').value;
+            const sortVal = document.getElementById('listing-sort').value;
+
+            let filtered = properties.filter(p => p.status === 'approved');
+
+            if (searchVal) {
+                filtered = filtered.filter(p => p.title.toLowerCase().includes(searchVal) || p.location.toLowerCase().includes(searchVal));
+            }
+            if (catVal !== 'all') {
+                filtered = filtered.filter(p => p.category === catVal);
+            }
+            if (overridePrice && overridePrice !== 'all') {
+                filtered = filtered.filter(p => p.price <= parseInt(overridePrice));
+            }
+
+            if (sortVal === 'low-high') filtered.sort((a,b) => a.price - b.price);
+            if (sortVal === 'high-low') filtered.sort((a,b) => b.price - a.price);
+
+            const grid = document.getElementById('all-properties-grid');
+            const noItems = document.getElementById('no-listings-found');
+            grid.innerHTML = '';
+
+            if (filtered.length === 0) {
+                noItems.classList.remove('hidden');
+            } else {
+                noItems.classList.add('hidden');
+                filtered.forEach(p => grid.innerHTML += createPropertyCardHTML(p));
+            }
+        }
+
+        function resetFilters() {
+            document.getElementById('listing-search').value = '';
+            document.getElementById('listing-cat').value = 'all';
+            document.getElementById('listing-sort').value = 'newest';
+            renderAllListingsPage();
+        }
+
+        <!-- Property Details View Launcher & Leaflet Setup -->
+        function openPropertyDetails(id) {
+            const prop = properties.find(p => String(p.id) === String(id));
+            if (!prop) { console.warn('Property not found for details:', id); return; }
+
+            activePropertyId = id;
+            document.getElementById('detail-title').innerText = prop.title;
+            document.getElementById('detail-location').innerHTML = `<i class="fa-solid fa-location-dot text-red-500"></i> ${prop.location}`;
+            document.getElementById('detail-price').innerText = Number(prop.price).toLocaleString('bn-BD');
+            const isHotel = prop.category === 'Hotel';
+            document.getElementById('detail-price-label').textContent = isHotel ? 'রুম ভাড়া' : 'মাসিক ভাড়া';
+            document.getElementById('detail-price-unit').textContent = isHotel ? '/দিন' : '/মাস';
+            document.getElementById('detail-category-badge').innerText = ({Family:'ফ্যামিলি বাসা',Bachelor:'ব্যাচেলর মেস',Sublet:'সাবলেট',Commercial:'দোকান / অফিস',Hotel:'হোটেল / গেস্ট হাউস'})[prop.category] || prop.category;
+            document.getElementById('detail-beds').innerText = prop.bedrooms;
+            document.getElementById('detail-baths').innerText = prop.bathrooms;
+            document.getElementById('detail-owner-name').innerText = prop.ownerName;
+            const ownerPhone=String(prop.ownerPhone||'').replace(/[^0-9+]/g,'');
+            const phoneLink=document.getElementById('detail-owner-phone');
+            phoneLink.textContent=ownerPhone||'ফোন নম্বর দেওয়া হয়নি';
+            phoneLink.href=ownerPhone?'tel:'+ownerPhone:'#';
+            phoneLink.classList.toggle('text-slate-400',!ownerPhone);
+
+            lightboxImages=(prop.images&&prop.images.length?prop.images:[prop.image]).filter(Boolean);
+            const mainPhoto=document.getElementById('detail-main-img');
+            mainPhoto.src=lightboxImages[0]||prop.image||'';
+            mainPhoto.alt=prop.title||'বাসার ছবি';
+            mainPhoto.onclick=()=>openPhotoLightbox(0);
+            document.getElementById('detail-published').textContent=formatPublished(prop.createdAt);
+            const videoWrap=byId('media-video-container');if(videoWrap){const videoUrls=(prop.videoUrls&&prop.videoUrls.length?prop.videoUrls:(prop.videoUrl?[prop.videoUrl]:[]));videoWrap.innerHTML=videoUrls.length?videoUrls.map((url,i)=>`<div class=\"bg-black rounded-xl overflow-hidden shadow-lg border mb-3\"><video controls preload=\"metadata\" class=\"w-full max-h-[520px] object-contain bg-black\" src=\"${url}\"></video><p class=\"text-xs text-slate-300 bg-slate-900 px-3 py-2\">ভিডিও ${i+1}</p></div>`).join(''):'<div class=\"bg-black rounded-xl overflow-hidden shadow-lg border\"><p class=\"text-center text-xs text-slate-400 py-8\">এই বিজ্ঞাপনে ভিডিও সংযুক্ত করা হয়নি।</p></div>'; }
+            document.getElementById('detail-description').textContent=prop.description || 'বিস্তারিত তথ্য দেওয়া হয়নি।';
+            renderPropertyAmenities(prop);
+            const genderLabels={both:'নারী ও পুরুষ উভয়েই ভাড়া নিতে পারবেন',male:'শুধু পুরুষ ভাড়াটিয়া',female:'শুধু নারী ভাড়াটিয়া',family:'শুধু পরিবার'};
+            document.getElementById('detail-rent-gender').textContent=genderLabels[prop.rentGender||'both'];
+            document.getElementById('rented-notice').classList.toggle('hidden',prop.adStatus!=='rented');
+            document.getElementById('public-ad-actions').classList.remove('hidden');
+            document.getElementById('btn-call-owner').classList.toggle('opacity-40',prop.adStatus==='rented');
+            document.getElementById('btn-whatsapp-owner').classList.toggle('opacity-40',prop.adStatus==='rented');
+            document.getElementById('btn-call-owner').setAttribute('aria-disabled',prop.adStatus==='rented');
+            document.getElementById('btn-whatsapp-owner').setAttribute('aria-disabled',prop.adStatus==='rented');
+            const thumbs=document.getElementById('detail-thumbnails');thumbs.innerHTML=lightboxImages.map((src,i)=>`<img src="${src}" alt="বাসার ছবি ${i+1}" onclick="openPhotoLightbox(${i})" class="h-20 sm:h-24 w-full object-cover rounded-lg border cursor-zoom-in hover:opacity-80">`).join('');
+
+            const callBtn=document.getElementById('btn-call-owner'),waBtn=document.getElementById('btn-whatsapp-owner');
+            callBtn.href=ownerPhone?'tel:'+ownerPhone:'#';
+            const waNumber=ownerPhone.replace(/^\+/,'').replace(/^0/,'88');
+            waBtn.href=ownerPhone?'https://wa.me/'+waNumber:'#';
+            callBtn.classList.toggle('opacity-40',!ownerPhone||prop.adStatus==='rented');
+            waBtn.classList.toggle('opacity-40',!ownerPhone||prop.adStatus==='rented');
+            callBtn.setAttribute('aria-disabled',String(!ownerPhone||prop.adStatus==='rented'));
+            waBtn.setAttribute('aria-disabled',String(!ownerPhone||prop.adStatus==='rented'));
+
+            switchTab('property-details');
+
+            // Property map: accept both normalized and raw Supabase coordinate names.
+            setTimeout(() => {
+                const mapEl=byId('details-leaflet-map');if(!mapEl||typeof L==='undefined')return;
+                if(detailsMapInstance){detailsMapInstance.remove();detailsMapInstance=null;}
+                const coords=getPropertyCoords(prop),center=coords?[coords.lat,coords.lng]:[23.685,90.3563];
+                detailsMapInstance=L.map('details-leaflet-map').setView(center,coords?16:7);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(detailsMapInstance);
+                if(coords)L.marker(center).addTo(detailsMapInstance).bindPopup(`<b>${escapeMapText(prop.title)}</b><br>ভাড়া: ৳ ${Number(prop.price||0).toLocaleString('bn-BD')}`).openPopup();
+                else L.popup().setLatLng(center).setContent('এই বিজ্ঞাপনের জন্য নির্দিষ্ট ম্যাপ লোকেশন দেওয়া হয়নি।').openOn(detailsMapInstance);
+                setTimeout(()=>detailsMapInstance&&detailsMapInstance.invalidateSize(),150);
+            },250);
+        }
+
+        function switchMediaTab(type) {
+            const photosContainer = document.getElementById('media-photos-container');
+            const videoContainer = document.getElementById('media-video-container');
+            const btnPhotos = document.getElementById('btn-media-photos');
+            const btnVideo = document.getElementById('btn-media-video');
+
+            if (type === 'photos') {
+                photosContainer.classList.remove('hidden');
+                videoContainer.classList.add('hidden');
+                btnPhotos.className = "py-2 border-b-2 border-emerald-600 text-emerald-700";
+                btnVideo.className = "py-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800";
+            } else {
+                photosContainer.classList.add('hidden');
+                videoContainer.classList.remove('hidden');
+                btnVideo.className = "py-2 border-b-2 border-emerald-600 text-emerald-700";
+                btnPhotos.className = "py-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800";
+            }
+        }
+
+        <!-- Post Ad Interactive Map Picker -->
+        function setPostMapPin(lat,lng,zoom=16){
+            const point=[Number(lat),Number(lng)];if(!postMapInstance||!point.every(Number.isFinite))return;
+            byId('picked-lat').textContent=point[0].toFixed(6);byId('picked-lng').textContent=point[1].toFixed(6);
+            if(postMarkerInstance)postMarkerInstance.setLatLng(point);else postMarkerInstance=L.marker(point).addTo(postMapInstance);
+            postMapInstance.setView(point,zoom);postMapInstance.invalidateSize();
+        }
+        function initPostMapPicker() {
+            if(typeof L==='undefined'){const status=byId('post-gps-status');if(status)status.textContent='ম্যাপ লোড হয়নি। ইন্টারনেট সংযোগ পরীক্ষা করুন।';return;}
+            if(postMapInstance)return;
+            postMapInstance=L.map('post-map-picker').setView([23.685,90.3563],7);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(postMapInstance);
+            postMapInstance.on('click',e=>setPostMapPin(e.latlng.lat,e.latlng.lng,16));
+            setTimeout(()=>postMapInstance&&postMapInstance.invalidateSize(),200);
+        }
+        async function searchPostMapPlace(){const q=byId('post-map-place-query')?.value.trim();if(!q)return;const status=byId('post-gps-status');if(status)status.textContent='ম্যাপে জায়গাটি খোঁজা হচ্ছে…';try{const place=await geocodeBangladeshPlace(q);setPostMapPin(Number(place.lat),Number(place.lon),16);if(status)status.textContent='সার্চ করা জায়গাটি পিন করা হয়েছে। বাসার সঠিক অবস্থানে ম্যাপে ক্লিক করে পিন ঠিক করুন।';}catch(e){if(status)status.textContent=e.message||'জায়গাটি পাওয়া যায়নি।';}}
+
+        // Use the browser's GPS to place the owner's current location on the ad map.
+        function usePostAdGpsLocation(){
+            const status=byId('post-gps-status'),button=byId('post-use-gps');
+            if(!postMapInstance){if(status)status.textContent='ম্যাপ প্রস্তুত হচ্ছে। একটু পরে আবার চেষ্টা করুন।';return;}
+            if(button){button.disabled=true;button.classList.add('opacity-60');}
+            if(status)status.textContent='আপনার ডিভাইসের অবস্থান খোঁজা হচ্ছে…';
+            getBrowserLocation(pos=>{
+                setPostMapPin(pos.lat,pos.lng,16);
+                if(status)status.textContent=`অবস্থান পিন করা হয়েছে (নির্ভুলতা ${locationAccuracyText(pos.accuracy)})। ৫০০ মিটারের বেশি হলে এটি আনুমানিক হতে পারে। বাসার সঠিক জায়গায় ম্যাপে ক্লিক করে পিন ঠিক করুন।`;
+                if(button){button.disabled=false;button.classList.remove('opacity-60');}
+            },err=>{if(status)status.textContent=err.message;if(button){button.disabled=false;button.classList.remove('opacity-60');}});
+        }
+
+        // Bangladesh administrative location cascade for ad posting.
+        let bdPostLocations=[];
+        function fillLocationSelect(el,items,placeholder){if(!el)return;el.innerHTML='';const first=document.createElement('option');first.value='';first.textContent=placeholder;el.appendChild(first);(items||[]).forEach((item,i)=>{const o=document.createElement('option');o.value=String(i);o.textContent=item.bn_name||item.name||item;el.appendChild(o)});el.disabled=!items||items.length===0;}
+        async function loadPostLocations(){try{if(!bdLocations.length){const res=await fetch(BD_LOCATION_URL);if(!res.ok)throw new Error('location fetch failed');bdPostLocations=await res.json();}else{bdPostLocations=bdLocations;}fillLocationSelect(byId('postDivision'),bdPostLocations,'বিভাগ নির্বাচন করুন');}catch(e){console.warn(e);fillLocationSelect(byId('postDivision'),[],'লোকেশন তালিকা লোড হয়নি');alert('বাংলাদেশের বিভাগ-জেলা-উপজেলা তালিকা লোড হয়নি। ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।');}}
+        function initPostLocationCascade(){const d=byId('postDivision'),z=byId('postDistrict'),u=byId('postUpazila'),a=byId('postArea');if(!d)return;d.addEventListener('change',()=>{const div=bdPostLocations[Number(d.value)];fillLocationSelect(z,div?.districts||[],'জেলা নির্বাচন করুন');fillLocationSelect(u,[],'আগে জেলা নির্বাচন করুন');fillLocationSelect(a,[],'আগে উপজেলা নির্বাচন করুন');});z.addEventListener('change',()=>{const div=bdPostLocations[Number(d.value)],dist=div?.districts?.[Number(z.value)];fillLocationSelect(u,dist?.upazilas||[],'উপজেলা / থানা নির্বাচন করুন');fillLocationSelect(a,[],'আগে উপজেলা নির্বাচন করুন');});u.addEventListener('change',()=>{const div=bdPostLocations[Number(d.value)],dist=div?.districts?.[Number(z.value)],upa=dist?.upazilas?.[Number(u.value)];fillLocationSelect(a,[...(upa?.unions||[]),...(upa?.pourashavas||[])],'এলাকা / ইউনিয়ন / ওয়ার্ড নির্বাচন করুন');});}
+        function getPostAddress(){const text=id=>{const el=byId(id);return el&&el.selectedIndex>0?el.options[el.selectedIndex].text:''};return [text('postArea'),text('postUpazila'),text('postDistrict'),text('postDivision'),byId('post-location')?.value.trim()].filter(Boolean).join(', ');}
+        let accumulatedPropertyPhotos=[];
+        function renderAccumulatedPhotos(){
+          const box=byId('post-photo-preview');if(!box)return;box.innerHTML='';
+          accumulatedPropertyPhotos.forEach((file,index)=>{
+            const wrap=document.createElement('div');wrap.className='relative';
+            const img=document.createElement('img');img.src=URL.createObjectURL(file);img.className='h-20 w-full object-cover rounded-lg border';img.alt=file.name;
+            const remove=document.createElement('button');remove.type='button';remove.textContent='×';remove.className='absolute -top-2 -right-2 rounded-full bg-red-600 text-white w-6 h-6 font-bold';remove.onclick=()=>{accumulatedPropertyPhotos.splice(index,1);syncPhotoInput();renderAccumulatedPhotos();};
+            wrap.append(img,remove);box.appendChild(wrap);
+          });
+        }
+        function syncPhotoInput(){
+          const input=byId('post-property-photos');if(!input)return;
+          try{const dt=new DataTransfer();accumulatedPropertyPhotos.forEach(f=>dt.items.add(f));input.files=dt.files;}catch(err){console.warn('Could not sync photo file list',err);}
+        }
+        function setupMediaPreviews(){
+          const photos=byId('post-property-photos'),videos=byId('post-property-video');
+          photos?.addEventListener('change',()=>{
+            const incoming=[...(photos.files||[])];
+            incoming.forEach(file=>{if(file.type.startsWith('image/')&&!accumulatedPropertyPhotos.some(x=>x.name===file.name&&x.size===file.size&&x.lastModified===file.lastModified))accumulatedPropertyPhotos.push(file);});
+            syncPhotoInput();renderAccumulatedPhotos();
+          });
+          videos?.addEventListener('change',()=>{
+            const files=[...(videos.files||[])];byId('post-video-preview').innerHTML=files.length?files.map((f,i)=>`<div class="py-1">${i+1}. ${escapeAccountText(f.name)} (${(f.size/1024/1024).toFixed(1)} MB)</div>`).join(''):'কোনো ভিডিও নির্বাচন করা হয়নি।';
+          });
+        }
+        let ownerAuthMode='login';
+        function openOwnerAuth(){if(window.toletOwnerSession){openAccountDashboard();return;}const m=byId('owner-auth-modal');m.classList.remove('hidden');m.classList.add('flex');}
+        function closeOwnerAuth(){const m=byId('owner-auth-modal');m.classList.add('hidden');m.classList.remove('flex');}
+        function openAccountDashboard(){const m=byId('account-dashboard');m.classList.remove('hidden');m.classList.add('flex');renderAccountDashboard();}
+        function closeAccountDashboard(){const m=byId('account-dashboard');m.classList.add('hidden');m.classList.remove('flex');}
+        async function renderAccountDashboard(){
+            const u=window.toletOwnerSession?.user;
+            if(!u)return;
+            byId('account-user-name').textContent=u.user_metadata?.full_name||u.user_metadata?.name||u.email?.split('@')[0]||'ব্যবহারকারী';
+            byId('account-user-email').textContent=u.email||'';
+            byId('account-ad-count').textContent=(window.toletOwnerProperties||[]).length+'টি';
+            renderOwnerProperties();
+            const badge=byId('account-nid-status-badge');
+            const message=byId('account-nid-status-message');
+            const action=byId('account-nid-action');
+            badge.className='text-xs font-extrabold rounded-full px-3 py-1 bg-slate-100 text-slate-700';
+            badge.textContent='লোড হচ্ছে…';
+            message.textContent='আপনার NID যাচাইয়ের অবস্থা দেখা হচ্ছে…';
+            action.classList.add('hidden');
+            try{
+                if(!window.toletSupabase) throw new Error('Supabase connection unavailable');
+                const {data,error}=await toletSupabase.from('profiles').select('verification_status').eq('id',u.id).maybeSingle();
+                if(error) throw error;
+                const status=String(data?.verification_status||'not_submitted').toLowerCase();
+                const states={
+                    verified:{label:'Verified',message:'অভিনন্দন! আপনার NID সফলভাবে যাচাই করা হয়েছে। এখন আপনি যাচাইকৃত মালিক হিসেবে বিজ্ঞাপন জমা দিতে পারবেন।',cls:'bg-emerald-100 text-emerald-800'},
+                    pending:{label:'Pending',message:'আপনার NID আবেদন জমা হয়েছে। Admin যাচাই করছেন। অনুমোদন হলে এখানে Verified দেখাবে।',cls:'bg-amber-100 text-amber-800'},
+                    rejected:{label:'Rejected',message:'আপনার NID আবেদন অনুমোদিত হয়নি। সংশোধন করে পুনরায় আবেদন করতে Admin-এর নির্দেশনা অনুসরণ করুন।',cls:'bg-red-100 text-red-800'},
+                    not_submitted:{label:'Not submitted',message:'আপনি এখনো NID Verification আবেদন করেননি। বাসার বিজ্ঞাপন অনুমোদনের আগে পরিচয় যাচাই সম্পন্ন করতে হবে।',cls:'bg-slate-100 text-slate-700'}
+                };
+                const view=states[status]||{label:status,message:'আপনার NID যাচাইয়ের অবস্থা পাওয়া গেছে। প্রয়োজনে Admin-এর সঙ্গে যোগাযোগ করুন।',cls:'bg-slate-100 text-slate-700'};
+                badge.textContent=view.label;
+                badge.className='text-xs font-extrabold rounded-full px-3 py-1 '+view.cls;
+                message.textContent=view.message;
+                if(status!=='verified') action.classList.remove('hidden');
+            }catch(err){
+                console.warn('NID status load failed:',err);
+                badge.textContent='Unavailable';
+                badge.className='text-xs font-extrabold rounded-full px-3 py-1 bg-red-100 text-red-800';
+                message.textContent='NID Status লোড করা যায়নি। profiles টেবিলে নিজের verification_status পড়ার SELECT policy আছে কি না পরীক্ষা করুন।';
+                action.classList.remove('hidden');
+            }
+        }
+        function setAuthMode(mode){ownerAuthMode=mode;const registering=mode==='register';byId('auth-register-fields').classList.toggle('hidden',!registering);byId('auth-confirm-wrap').classList.toggle('hidden',!registering);byId('auth-name').required=registering;byId('auth-confirm-password').required=registering;byId('auth-password').autocomplete=registering?'new-password':'current-password';byId('auth-submit-label').textContent=registering?'অ্যাকাউন্ট তৈরি করুন':'লগইন করুন';byId('auth-login-tab').className=!registering?'flex-1 rounded-lg bg-emerald-700 text-white py-2 font-bold':'flex-1 rounded-lg bg-slate-100 text-slate-700 py-2 font-bold';byId('auth-register-tab').className=registering?'flex-1 rounded-lg bg-emerald-700 text-white py-2 font-bold':'flex-1 rounded-lg bg-slate-100 text-slate-700 py-2 font-bold';}
+        async function demoOwnerAuth(e){e.preventDefault();const email=byId('auth-email').value.trim(),password=byId('auth-password').value;if(!window.toletSupabase){alert('Backend সংযোগ পাওয়া যায়নি।');return;}if(ownerAuthMode==='register'&&password!==byId('auth-confirm-password').value){alert('দুটি পাসওয়ার্ড মিলছে না।');return;}const btn=byId('auth-submit-label');btn.disabled=true;btn.textContent='অপেক্ষা করুন…';try{let result;if(ownerAuthMode==='register'){result=await toletSupabase.auth.signUp({email,password,options:{data:{full_name:byId('auth-name').value.trim()},emailRedirectTo:location.origin}});}else{result=await toletSupabase.auth.signInWithPassword({email,password});}if(result.error)throw result.error;if(ownerAuthMode==='register'&&!result.data.session){alert('অ্যাকাউন্ট তৈরি হয়েছে। ইমেইলে confirmation link পাঠানো হয়েছে। সেটি confirm করে Login করুন।');}else{closeOwnerAuth();await loadOwnerSession();openAccountDashboard();alert(ownerAuthMode==='register'?'অ্যাকাউন্ট তৈরি হয়েছে এবং লগইন হয়েছে।':'লগইন সফল হয়েছে।');}}catch(err){alert('Authentication Error: '+(err.message||'আবার চেষ্টা করুন'));}finally{btn.disabled=false;btn.textContent=ownerAuthMode==='register'?'অ্যাকাউন্ট তৈরি করুন':'লগইন করুন';}}
+        async function loadOwnerSession(){if(!window.toletSupabase)return null;const {data:{session},error}=await toletSupabase.auth.getSession();if(error)console.warn(error);window.toletOwnerSession=session;const b=document.querySelector('[onclick="openOwnerAuth()"]');if(b){if(session){b.innerHTML='<i class="fa-solid fa-user-check"></i><span>আমার অ্যাকাউন্ট</span>';b.setAttribute('aria-label','আমার অ্যাকাউন্ট');}else{b.innerHTML='<i class="fa-solid fa-user"></i><span>অ্যাকাউন্ট</span>';}}if(session){await loadOwnerProperties();}return session;}
+        async function demoGoogleSignIn(){if(!window.toletSupabase){alert('Backend সংযোগ পাওয়া যায়নি।');return;}const {error}=await toletSupabase.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin}});if(error)alert(error.message);}
+        async function ownerLogout(){if(!window.toletSupabase)return;const {error}=await toletSupabase.auth.signOut();if(error){alert('Logout হয়নি: '+error.message);return;}window.toletOwnerSession=null;window.toletOwnerProperties=[];closeAccountDashboard();closeOwnerAuth();alert('Logout সফল হয়েছে।');await loadOwnerSession();}
+
+
+        async function handleOwnerVerificationSubmit(e){
+            e.preventDefault();
+            if(!window.toletSupabase){alert('Backend সংযোগ পাওয়া যায়নি।');return;}
+            const {data:{user},error}=await toletSupabase.auth.getUser();
+            if(error||!user){openOwnerAuth();alert('NID Verification-এর আবেদন করতে আগে Login করুন।');return;}
+            const form=byId('owner-verification-form');
+            const name=byId('verify-nid-name').value.trim();
+            const dob=byId('verify-nid-dob').value;
+            const nid=byId('verify-nid-number').value.trim();
+            const phone=byId('verify-nid-phone').value.trim();
+            const selfie=byId('verify-nid-selfie').files[0];
+            const front=byId('verify-nid-front').files[0];
+            const back=byId('verify-nid-back').files[0];
+            if(!/^(?:[0-9]{10}|[0-9]{13}|[0-9]{17})$/.test(nid)){alert('NID নম্বর ১০, ১৩ অথবা ১৭ ডিজিট হতে হবে।');return;}
+            const files=[selfie,front,back];
+            if(files.some(x=>!x)){alert('নিজের ছবি এবং NID-এর দুই পাশের ছবি নির্বাচন করুন।');return;}
+            const allowed=['image/jpeg','image/png','image/webp'];
+            if(files.some(x=>!allowed.includes(x.type)||x.size>5*1024*1024)){alert('প্রতিটি ছবি JPG, PNG বা WebP হতে হবে এবং ৫ MB-এর কম হতে হবে।');return;}
+            const btn=form.querySelector('button[type="submit"]');
+            const old=btn.textContent;btn.disabled=true;btn.textContent='নিরাপদে জমা হচ্ছে…';
+            try{
+              const body=new FormData();
+              body.append('nid_name',name);body.append('date_of_birth',dob);body.append('nid_number',nid);body.append('phone',phone);
+              body.append('selfie',selfie);body.append('nid_front',front);body.append('nid_back',back);
+              const {data,error:fnError}=await toletSupabase.functions.invoke('submit-owner-verification',{body});
+              if(fnError)throw fnError;
+              if(data?.error)throw new Error(data.error);
+              form.reset();
+              alert('আপনার NID Verification আবেদন নিরাপদে জমা হয়েছে। Admin যাচাই করার পর ফলাফল জানানো হবে।');
+              switchTab('home');
+            }catch(err){
+              console.error('NID verification submit failed',err);
+              alert('NID আবেদন জমা হয়নি: '+(err.message||'আবার চেষ্টা করুন')+'। Backend Function ও Secrets ঠিকভাবে সেট করা আছে কি না পরীক্ষা করুন।');
+            }finally{btn.disabled=false;btn.textContent=old;}
+        }
+
+        const BUILTIN_AMENITIES=['হাই-স্পিড ওয়াইফাই','আধুনিক লিফট','সিসিটিভি সিকিউরিটি','জেনারেটর ব্যাকআপ','বাইক/কার পার্কিং','২৪ ঘণ্টা পানি','গ্যাস সংযোগ','আলাদা গ্যাস মিটার','আলাদা পানির মিটার','বিদ্যুৎ ব্যাকআপ','বারান্দা','ছাদ ব্যবহারের সুবিধা','লিফট','ফায়ার সেফটি','নিরাপত্তাকর্মী','টাইলস করা ফ্লোর','আলো-বাতাসপূর্ণ','ড্রয়িং রুম','ডাইনিং রুম','অ্যাটাচড বাথরুম','মডুলার কিচেন','CCTV','Wi-Fi'];
+        const amenityState={post:[],edit:[]};
+        function renderAmenityEditor(mode){
+          const preset=byId(mode+'-amenity-presets'),selected=byId(mode+'-amenity-selected');if(!preset||!selected)return;
+          preset.innerHTML='';
+          BUILTIN_AMENITIES.forEach(name=>{
+            const chosen=amenityState[mode].includes(name);
+            const button=document.createElement('button');
+            button.type='button';button.className='rounded-full border px-3 py-1.5 text-xs font-semibold '+(chosen?'bg-emerald-700 text-white border-emerald-700':'bg-white text-slate-700');
+            button.textContent=name+(chosen?' ✓':' +');
+            button.addEventListener('click',()=>toggleBuiltinAmenity(mode,name));
+            preset.appendChild(button);
+          });
+          selected.innerHTML='';
+          if(!amenityState[mode].length){selected.innerHTML='<span class="text-xs text-slate-400">এখনো কোনো সুবিধা যোগ করা হয়নি।</span>';return;}
+          amenityState[mode].forEach((name,index)=>{
+            const chip=document.createElement('span');chip.className='inline-flex items-center gap-2 rounded-full bg-white border border-emerald-200 px-3 py-1.5 text-xs font-bold text-emerald-800';
+            const label=document.createElement('span');label.textContent=name;
+            const remove=document.createElement('button');remove.type='button';remove.setAttribute('aria-label','Remove '+name);remove.className='text-red-600 font-black';remove.textContent='×';remove.addEventListener('click',()=>removeAmenity(mode,index));
+            chip.append(label,remove);selected.appendChild(chip);
+          });
+        }
+        function toggleBuiltinAmenity(mode,name){const a=amenityState[mode];amenityState[mode]=a.includes(name)?a.filter(x=>x!==name):[...a,name];renderAmenityEditor(mode);}
+        function addCustomAmenity(mode){const input=byId(mode+'-custom-amenity'),name=(input?.value||'').trim();if(!name)return;if(!amenityState[mode].some(x=>x.toLocaleLowerCase()===name.toLocaleLowerCase()))amenityState[mode].push(name);if(input)input.value='';renderAmenityEditor(mode);}
+        function removeAmenity(mode,index){amenityState[mode].splice(index,1);renderAmenityEditor(mode);}
+        function setAmenityEditor(mode,items){amenityState[mode]=Array.isArray(items)?[...new Set(items.map(x=>String(x).trim()).filter(Boolean))]:[];renderAmenityEditor(mode);}
+        function renderPropertyAmenities(prop){
+          const desc=byId('detail-amenity-description'),list=byId('detail-amenities-list');if(!desc||!list)return;
+          const items=Array.isArray(prop.amenities)?prop.amenities:[];desc.textContent=prop.amenityDescription||'';
+          list.innerHTML=items.length?items.map(a=>`<div class="bg-slate-50 p-2.5 rounded-lg flex items-center gap-2 border"><i class="fa-solid fa-check text-emerald-600 text-sm"></i><span>${escapeAccountText(a)}</span></div>`).join(''):'<p class="col-span-full text-sm text-slate-400">বাড়ির মালিক এখনো কোনো সুবিধা যোগ করেননি।</p>';
+        }
+        document.addEventListener('DOMContentLoaded',()=>{setAmenityEditor('post',[]);setAmenityEditor('edit',[]);});
+
+        async function handlePostAdSubmit(e) {
+            e.preventDefault();
+            if(!window.toletSupabase){alert('Backend সংযোগ পাওয়া যায়নি।');return;}
+            const {data:{user}}=await toletSupabase.auth.getUser();
+            if(!user){openOwnerAuth();alert('বিজ্ঞাপন পোস্ট করার আগে লগইন করুন।');return;}
+            const selectedPhotos=[...accumulatedPropertyPhotos], selectedVideos=[...(byId('post-property-video')?.files||[])];
+            if(!byId('postDivision').value||!byId('postDistrict').value||!byId('postUpazila').value){alert('বিভাগ, জেলা ও উপজেলা নির্বাচন করুন।');return;}
+            if(!selectedPhotos.length){alert('কমপক্ষে একটি বাসার ছবি নির্বাচন করুন।');return;}
+            if(selectedPhotos.length>12||selectedVideos.length>3){alert('সর্বোচ্চ ১২টি ছবি ও ৩টি ভিডিও আপলোড করা যাবে।');return;}
+            if([...selectedPhotos,...selectedVideos].some(f=>f.size>50*1024*1024)){alert('প্রতিটি মিডিয়া ফাইল ৫০ MB-এর কম হতে হবে।');return;}
+            const div=byId('postDivision').selectedOptions[0]?.textContent||'',dist=byId('postDistrict').selectedOptions[0]?.textContent||'',upa=byId('postUpazila').selectedOptions[0]?.textContent||'',area=byId('postArea').selectedIndex>0?byId('postArea').selectedOptions[0].textContent:'';
+            const coords=(id)=>{const n=Number(byId(id)?.textContent);return Number.isFinite(n)?n:null;};
+            const lat=coords('picked-lat'),lng=coords('picked-lng');
+            const fullName=byId('post-owner-name')?.value?.trim()||user.user_metadata?.full_name||'বাড়ির মালিক';
+            const phone=byId('post-owner-phone')?.value?.trim()||user.phone||'';
+            if(!/^01[3-9]\d{8}$/.test(phone)){alert('সঠিক ১১ ডিজিটের বাংলাদেশি মোবাইল নম্বর দিন (যেমন 01XXXXXXXXX)।');byId('post-owner-phone')?.focus();return;}
+            const payload={owner_id:user.id,title:byId('post-title').value.trim(),category:byId('post-category').value,price:Number(byId('post-price').value),description:byId('post-description').value.trim(),amenities:amenityState.post,amenity_description:byId('post-amenity-description').value.trim(),division:div,district:dist,upazila:upa,area,address:[area,upa,dist,div,byId('post-location').value.trim()].filter(Boolean).join(', '),bedrooms:Number(byId('post-beds').value||0),bathrooms:Number(byId('post-baths').value||0),rent_gender:byId('post-rent-gender').value,available_from:byId('post-available-from').value||null,latitude:lat,longitude:lng,owner_display_name:fullName,owner_contact_phone:phone,status:'pending'};
+            const submit=e.submitter||document.querySelector('#post-ad-form button[type="submit"]');if(submit){submit.disabled=true;submit.dataset.oldText=submit.textContent;submit.textContent='বিজ্ঞাপন সংরক্ষণ হচ্ছে…';}
+            try{
+              const {data:property,error}=await toletSupabase.from('properties').insert(payload).select().single();if(error)throw error;
+              const uploads=[];
+              for(const [type,files] of [['image',selectedPhotos],['video',selectedVideos]]) for(let i=0;i<files.length;i++){
+                const file=files[i];const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,'_');const path=`${user.id}/${property.id}/${Date.now()}_${i}_${safe}`;
+                const {error:upErr}=await toletSupabase.storage.from(type==='image'?'property-images':'property-videos').upload(path,file,{contentType:file.type,upsert:false});if(upErr)throw upErr;
+                uploads.push({property_id:property.id,owner_id:user.id,media_type:type,storage_path:path,sort_order:i});
+              }
+              if(uploads.length){const {error:mediaErr}=await toletSupabase.from('property_media').insert(uploads);if(mediaErr)throw mediaErr;}
+              alert('বিজ্ঞাপন Database-এ জমা হয়েছে। Admin অনুমোদন না দেওয়া পর্যন্ত এটি Public হবে না।');
+              byId('post-ad-form').reset();accumulatedPropertyPhotos=[];renderAccumulatedPhotos();byId('post-photo-preview').innerHTML='';byId('post-video-preview').innerHTML='';
+              if(typeof loadOwnerProperties==='function')await loadOwnerProperties();
+              switchTab('home');
+            }catch(err){console.error(err);alert('বিজ্ঞাপন সংরক্ষণে সমস্যা: '+(err.message||'আবার চেষ্টা করুন')+'\nযদি Property তৈরি হয়ে গিয়ে Media upload ব্যর্থ হয়, Admin Panel থেকে Pending বিজ্ঞাপনটি পরীক্ষা করুন.');}
+            finally{if(submit){submit.disabled=false;submit.textContent=submit.dataset.oldText||'বিজ্ঞাপন পোস্ট করুন';}}
+        }
+        function escapeAccountText(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
+        function propertyStatusView(status){const map={pending:['যাচাইয়ের অপেক্ষায়','bg-amber-100 text-amber-800'],approved:['অনুমোদিত','bg-emerald-100 text-emerald-800'],rejected:['অনুমোদিত হয়নি','bg-red-100 text-red-800'],suspended:['স্থগিত','bg-slate-200 text-slate-700']};return map[String(status||'').toLowerCase()]||[status||'অজানা','bg-slate-100 text-slate-700'];}
+        function renderOwnerProperties(){const box=byId('account-properties-list');if(!box)return;const items=window.toletOwnerProperties||[];if(!items.length){box.innerHTML='<div class="rounded-xl border border-dashed p-5 text-center text-sm text-slate-500">আপনি এখনো কোনো বিজ্ঞাপন জমা দেননি।</div>';return;}box.innerHTML=items.map(p=>{const [label,cls]=propertyStatusView(p.status);return `<article class="rounded-xl border border-slate-200 p-3"><div class="flex items-start justify-between gap-2"><h5 class="font-bold text-sm text-slate-900 min-w-0">${escapeAccountText(p.title)}</h5><span class="shrink-0 rounded-full px-2 py-1 text-[10px] font-extrabold ${cls}">${escapeAccountText(label)}</span></div><div class="text-xs text-slate-500 mt-1">৳ ${Number(p.price||0).toLocaleString('en-BD')} · ${p.created_at?new Date(p.created_at).toLocaleDateString('bn-BD'):''}</div><div class="flex gap-2 mt-3"><button type="button" class="flex-1 rounded-lg border py-2 text-xs font-bold text-emerald-800" onclick="editOwnerProperty('${String(p.id).replace(/[^a-zA-Z0-9-]/g,'')}')"><i class="fa-solid fa-pen mr-1"></i> বিস্তারিত Edit</button><button type="button" class="flex-1 rounded-lg border border-red-200 bg-red-50 py-2 text-xs font-bold text-red-700" onclick="deleteOwnerProperty('${String(p.id).replace(/[^a-zA-Z0-9-]/g,'')}')"><i class="fa-solid fa-trash mr-1"></i> Delete</button></div></article>`;}).join('');}
+        let currentOwnerEditPropertyId = null;
+        function editOwnerProperty(id){
+          const item=(window.toletOwnerProperties||[]).find(p=>String(p.id)===String(id));
+          if(!item){alert('বিজ্ঞাপনটি পাওয়া যায়নি।');return;}
+          currentOwnerEditPropertyId=String(item.id);
+          byId('owner-edit-property-id').value=String(item.id);
+          byId('owner-edit-title').value=item.title||'';
+          byId('owner-edit-category').value=item.category||'Family';
+          byId('owner-edit-price').value=item.price||'';
+          byId('owner-edit-address').value=item.address||'';
+          byId('owner-edit-description').value=item.description||'';
+          setAmenityEditor('edit',item.amenities||[]);
+          byId('owner-edit-amenity-description').value=item.amenity_description||'';
+          byId('owner-edit-rent-gender').value=item.rent_gender||'both';
+          byId('owner-edit-available-from').value=item.available_from||'';
+          byId('owner-edit-feedback').textContent='';
+          closeAccountDashboard();
+          switchTab('owner-property-edit');
+        }
+        function backToOwnerAccount(){switchTab('home');openAccountDashboard();loadOwnerProperties();}
+        async function saveOwnerPropertyEdit(event){
+          event.preventDefault();
+          const id=byId('owner-edit-property-id').value;
+          const title=byId('owner-edit-title').value.trim();
+          const price=Number(byId('owner-edit-price').value);
+          const address=byId('owner-edit-address').value.trim();
+          const description=byId('owner-edit-description').value.trim();
+          const feedback=byId('owner-edit-feedback');
+          if(!title||!address||!description||!Number.isFinite(price)||price<=0){feedback.className='mt-4 text-sm text-red-600';feedback.textContent='সব প্রয়োজনীয় তথ্য সঠিকভাবে পূরণ করুন।';return;}
+          const {data:{user}}=await toletSupabase.auth.getUser();
+          if(!user){feedback.className='mt-4 text-sm text-red-600';feedback.textContent='সেশন শেষ হয়েছে। আবার Login করুন।';return;}
+          const button=byId('owner-edit-save');button.disabled=true;button.textContent='সংরক্ষণ হচ্ছে…';
+          const payload={title,category:byId('owner-edit-category').value,price,address,description,rent_gender:byId('owner-edit-rent-gender').value,available_from:byId('owner-edit-available-from').value||null,status:'pending'};
+          const {error}=await toletSupabase.from('properties').update(payload).eq('id',id).eq('owner_id',user.id);
+          button.disabled=false;button.innerHTML='<i class="fa-solid fa-floppy-disk mr-2"></i> পরিবর্তন সংরক্ষণ করুন';
+          if(error){feedback.className='mt-4 text-sm text-red-600';feedback.textContent='সংরক্ষণ করা যায়নি: '+error.message;return;}
+          feedback.className='mt-4 text-sm font-bold text-emerald-700';feedback.textContent='পরিবর্তন সংরক্ষিত হয়েছে। বিজ্ঞাপনটি Admin Review-এর জন্য Pending হয়েছে।';
+          await loadOwnerProperties();
+          setTimeout(backToOwnerAccount,900);
+        }
+        async function deleteOwnerPropertyFromEditPage(){
+          const id=byId('owner-edit-property-id').value;
+          if(!id)return;
+          const ok=window.confirm('এই বিজ্ঞাপনটি স্থায়ীভাবে Delete করতে চান? এই কাজ আর Undo করা যাবে না।');
+          if(!ok)return;
+          const {data:{user}}=await toletSupabase.auth.getUser();
+          if(!user){alert('আবার Login করুন।');return;}
+          const {error}=await toletSupabase.from('properties').delete().eq('id',id).eq('owner_id',user.id);
+          if(error){byId('owner-edit-feedback').className='mt-4 text-sm text-red-600';byId('owner-edit-feedback').textContent='Delete করা যায়নি: '+error.message;return;}
+          await loadOwnerProperties();backToOwnerAccount();
+        }
+        async function deleteOwnerProperty(id){if(!confirm('এই বিজ্ঞাপনটি স্থায়ীভাবে মুছে ফেলতে চান?'))return;const {data:{user}}=await toletSupabase.auth.getUser();if(!user)return;const {error}=await toletSupabase.from('properties').delete().eq('id',id).eq('owner_id',user.id);if(error){alert('Delete করা যায়নি: '+error.message+'। properties টেবিলে নিজের বিজ্ঞাপন Delete করার RLS policy প্রয়োজন হতে পারে।');return;}alert('বিজ্ঞাপন মুছে ফেলা হয়েছে।');await loadOwnerProperties();}
+        async function loadOwnerProperties(){if(!toletSupabase)return;const {data:{user}}=await toletSupabase.auth.getUser();if(!user)return;const {data,error}=await toletSupabase.from('properties').select('id,title,status,price,description,amenities,amenity_description,created_at,category,address,rent_gender,available_from').eq('owner_id',user.id).order('created_at',{ascending:false});if(error){console.warn(error);const box=byId('account-properties-list');if(box)box.innerHTML='<p class="text-sm text-red-600">বিজ্ঞাপন লোড করা যায়নি: '+escapeAccountText(error.message)+'</p>';return;}window.toletOwnerProperties=data||[];if(typeof renderAccountDashboard==='function'&&window.toletOwnerSession)renderAccountDashboard();renderOwnerProperties();loadOwnerRemovalRequests();}
+        async function loadApprovedDatabaseProperties(){if(!toletSupabase)return;const {data,error}=await toletSupabase.from('properties').select('*,property_media(media_type,storage_path,sort_order)').eq('status','approved').eq('availability_status','available').order('created_at',{ascending:false});if(error){console.warn('Public properties not loaded',error.message);return;}const remote=(data||[]).map(p=>{const media=(Array.isArray(p.property_media)?p.property_media:[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0));const images=media.filter(m=>m.media_type==='image'&&m.storage_path).map(m=>toletSupabase.storage.from('property-images').getPublicUrl(m.storage_path).data.publicUrl).filter(Boolean);const videos=media.filter(m=>m.media_type==='video'&&m.storage_path).map(m=>toletSupabase.storage.from('property-videos').getPublicUrl(m.storage_path).data.publicUrl).filter(Boolean);return{id:p.id,title:p.title,category:p.category,price:Number(p.price),location:p.address,bedrooms:p.bedrooms,bathrooms:p.bathrooms,image:images[0]||'',images,videoUrls:videos,ownerName:p.owner_display_name,ownerPhone:p.owner_contact_phone,lat:p.latitude,lng:p.longitude,status:p.status,verified:false,description:p.description,amenities:Array.isArray(p.amenities)?p.amenities:[],amenityDescription:p.amenity_description||'',rentGender:p.rent_gender,createdAt:p.created_at,adStatus:p.availability_status,source:'supabase'};});window.toletRemoteProperties=remote;properties=remote.concat(properties.filter(x=>!x.source));if(typeof renderHomeProperties==='function')renderHomeProperties();}
+
+        async function loadOwnerRemovalRequests(){
+          const box=byId('owner-removal-requests');if(!box||!toletSupabase)return;
+          const {data:{user}}=await toletSupabase.auth.getUser();if(!user){box.innerHTML='';return;}
+          const {data,error}=await toletSupabase.from('property_removal_requests').select('id,property_id,requester_name,requester_phone,reason,details,status,created_at,properties(title,address,price,status)').eq('owner_id',user.id).order('created_at',{ascending:false}).limit(50);
+          if(error){box.innerHTML='<p class="text-xs text-amber-700">Remove Request লোড হয়নি: '+escapeAccountText(error.message)+'</p>';return;}
+          box.innerHTML='<h4 class="font-extrabold mb-2">তোমার বিজ্ঞাপনের Remove Request</h4>'+(data||[]).map(r=>`<div class="border rounded-lg p-3 mb-2 text-sm"><div class="flex flex-wrap justify-between gap-2"><b>${escapeAccountText(r.properties?.title||'তোমার বিজ্ঞাপন')}</b><span class="rounded-full px-2 py-1 text-xs font-bold bg-amber-100 text-amber-800">${escapeAccountText(r.status)}</span></div><div class="text-xs text-slate-600 mt-1">কারণ: ${escapeAccountText(r.reason)} · পাঠিয়েছেন: ${escapeAccountText(r.requester_name)} (${escapeAccountText(r.requester_phone)})</div><p class="text-xs mt-1">${escapeAccountText(r.details||'বিস্তারিত দেওয়া হয়নি')}</p><div class="text-xs text-slate-500 mt-1">বিজ্ঞাপনের ভাড়া: ৳${Number(r.properties?.price||0).toLocaleString('bn-BD')} · Ad Status: ${escapeAccountText(r.properties?.status||'')}</div></div>`).join('')||'<p class="text-xs text-slate-500">কোনো অনুরোধ নেই।</p>';
+        }
+        async function loadAdminRemovalRequests(){
+          const box=byId('admin-removal-requests');if(!box||!toletSupabase)return;
+          const {data,error}=await toletSupabase.from('property_removal_requests').select('id,property_id,owner_id,requester_name,requester_phone,reason,details,status,created_at,properties(title,address,price,status,owner_display_name,owner_contact_phone)').order('created_at',{ascending:false}).limit(100);
+          if(error){box.textContent='অনুরোধ লোড হয়নি: '+error.message;return;}
+          box.innerHTML=(data||[]).map(r=>`<article class="border rounded-xl p-3"><div class="flex flex-wrap justify-between gap-2"><div><b>${adminEscape(r.properties?.title||'বিজ্ঞাপন')}</b><div class="text-xs text-slate-500 mt-1">Request ID: ${adminEscape(r.id)}</div></div><span class="rounded-full bg-amber-100 text-amber-800 px-2 py-1 text-xs font-bold">${adminEscape(r.status)}</span></div><div class="text-xs text-slate-700 mt-2">অনুরোধকারী: ${adminEscape(r.requester_name)} · ${adminEscape(r.requester_phone)} · ${adminEscape(r.reason)}</div><p class="text-xs mt-1">${adminEscape(r.details||'বিস্তারিত দেওয়া হয়নি')}</p><div class="text-xs text-slate-600 mt-2">বিজ্ঞাপনের ঠিকানা: ${adminEscape(r.properties?.address||'')} · ভাড়া: ৳${Number(r.properties?.price||0).toLocaleString('bn-BD')} · মালিক: ${adminEscape(r.properties?.owner_display_name||'')} · ${adminEscape(r.properties?.owner_contact_phone||'')}</div><div class="flex flex-wrap gap-2 mt-3"><button onclick="viewAdminAd('${adminEscape(r.property_id)}')" class="px-3 py-2 rounded-lg bg-slate-900 text-white text-xs font-bold">এই বিজ্ঞাপনের সম্পূর্ণ তথ্য</button><button onclick="setRemovalRequestStatus('${adminEscape(r.id)}','reviewed')" class="px-3 py-2 rounded-lg bg-slate-700 text-white text-xs font-bold">Reviewed</button><button onclick="setRemovalRequestStatus('${adminEscape(r.id)}','resolved')" class="px-3 py-2 rounded-lg bg-emerald-700 text-white text-xs font-bold">Resolved</button><button onclick="deleteRemovalRequest('${adminEscape(r.id)}')" class="px-3 py-2 rounded-lg bg-red-600 text-white text-xs font-bold">Request Delete</button></div></article>`).join('')||'<p class="text-sm text-slate-500">কোনো Remove Request নেই।</p>';
+        }
+        async function setRemovalRequestStatus(id,status){
+          const {error}=await toletSupabase.from('property_removal_requests').update({status}).eq('id',id);
+          if(error){alert('Status update হয়নি: '+error.message);return;}loadAdminRemovalRequests();
+        }
+        async function deleteRemovalRequest(id){
+          if(!confirm('শুধু এই Remove Request-টি Delete করবেন? বিজ্ঞাপনটি Delete হবে না।'))return;
+          const {error}=await toletSupabase.from('property_removal_requests').delete().eq('id',id);
+          if(error){alert('Request Delete হয়নি: '+error.message);return;}loadAdminRemovalRequests();
+        }
+        // Admin panel: role is rechecked from the profiles table and privileged operations use an Edge Function.
+        let toletAdminProfile = null;
+        let adminVerificationCache = [];
+        let adminNidFilter = "pending";
+        let adminPropertyCache = [];
+        let adminAdFilter = 'pending';
+        const adminEscape = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        async function openAdminPanel(){
+          if(!window.toletSupabase){alert('Supabase সংযোগ পাওয়া যায়নি।');return;}
+          const status=byId('admin-status'); status.textContent='Admin permission যাচাই হচ্ছে…';
+          // Dismiss the account modal before navigating. Its fixed high-z-index overlay
+          // otherwise remains on top of the Admin page and looks like the dashboard did not open.
+          const accountModal=byId('account-dashboard');
+          if(accountModal){accountModal.classList.add('hidden');accountModal.classList.remove('flex');}
+          if(typeof closeAccountDashboard==='function') closeAccountDashboard();
+          switchTab('admin');
+          try{
+            const {data:{user},error:userErr}=await toletSupabase.auth.getUser();
+            if(userErr||!user){status.textContent='Admin access পেতে আগে লগইন করুন।';openOwnerAuth();return;}
+            const {data:profile,error}=await toletSupabase.from('profiles').select('role,verification_status').eq('id',user.id).single();
+            if(error)throw error;
+            if(profile?.role!=='admin'){status.textContent='এই অ্যাকাউন্টে Admin permission নেই।';return;}
+            toletAdminProfile={...profile,user};
+            status.textContent='Admin হিসেবে লগইন করেছেন।';
+            byId('admin-content').classList.remove('hidden');
+            byId('account-admin-entry')?.classList.remove('hidden');
+            await loadAdminData();
+          }catch(err){status.textContent='Admin যাচাই ব্যর্থ: '+(err.message||'Database/RLS configuration পরীক্ষা করুন।');}
+        }
+        function showAdminSection(name){
+          ['nid','ads','users','settings'].forEach(x=>byId('admin-section-'+x).classList.toggle('hidden',x!==name));
+          document.querySelectorAll('.admin-tab-btn').forEach((b,i)=>{const active=['nid','ads','users','settings'][i]===name;b.className='admin-tab-btn px-4 py-2 rounded-lg font-bold '+(active?'bg-emerald-700 text-white':'bg-white border');});
+        }
+        async function callAdminFunction(body){
+          const {data,error}=await toletSupabase.functions.invoke('admin-review-owner-verification',{body});
+          if(error)throw error;if(data?.error)throw new Error(data.error);return data;
+        }
+        async function loadAdminData(){
+          if(!toletAdminProfile)return;
+          const [verifications,properties,profiles]=await Promise.allSettled([
+            callAdminFunction({action:'list_verifications'}),
+            callAdminFunction({action:'list_properties'}),
+            callAdminFunction({action:'list_profiles'})
+          ]);
+          if(verifications.status==='fulfilled'){
+            adminVerificationCache=verifications.value.items||[];
+            byId('admin-stat-nid').textContent=adminVerificationCache.filter(x=>String(x.status||'').toLowerCase()==='pending').length;
+            renderAdminNidList();
+          }else{byId('admin-nid-list').textContent='NID তালিকা লোড হয়নি: '+verifications.reason.message;}
+          if(properties.status==='fulfilled'){
+            adminPropertyCache=properties.value.items||[];
+            byId('admin-stat-ads').textContent=adminPropertyCache.filter(x=>x.status==='pending').length;
+            byId('admin-stat-properties').textContent=adminPropertyCache.length;
+            renderAdminAds();
+          }else{byId('admin-ads-list').textContent='বিজ্ঞাপন লোড হয়নি: '+properties.reason.message;}
+          if(profiles.status==='fulfilled'){
+            const users=profiles.value.items||[];byId('admin-stat-users').textContent=users.length;
+            byId('admin-users-list').innerHTML=users.map(u=>`<div class="border rounded-xl p-3 flex flex-wrap justify-between gap-2"><div><b>${adminEscape(u.full_name||u.email||u.id)}</b><div class="text-xs text-slate-500">${adminEscape(u.email||'')} · ${adminEscape(u.verification_status||'unverified')}</div></div><span class="text-xs font-bold">${adminEscape(u.role||'user')}</span></div>`).join('')||'কোনো প্রোফাইল নেই।';
+          }else{byId('admin-users-list').textContent='ব্যবহারকারী লোড হয়নি: '+profiles.reason.message;}
+          loadAdminRemovalRequests();
+          loadAdminSettings();
+        }
+        function renderAdminNidList(){
+          const list=byId('admin-nid-list'),filters=byId('admin-nid-filters');if(!list||!filters)return;
+          const keys=['pending','verified','rejected','all'],labels={pending:'Pending · অপেক্ষমাণ',verified:'Approved · অনুমোদিত',rejected:'Rejected · বাতিল',all:'সব আবেদন'};
+          const norm=v=>String(v||'').toLowerCase();
+          filters.innerHTML=keys.map(k=>{const count=k==='all'?adminVerificationCache.length:adminVerificationCache.filter(v=>norm(v.status)===k).length;const active=adminNidFilter===k;return `<button type="button" onclick="setAdminNidFilter('${k}')" class="px-3 py-2 rounded-xl border text-sm font-extrabold ${active?'bg-slate-900 text-white':'bg-white text-slate-700'}">${labels[k]} <span class="ml-1 rounded-full px-2 py-0.5 text-xs ${active?'bg-white/20':'bg-slate-100'}">${count}</span></button>`}).join('');
+          const rows=adminNidFilter==='all'?adminVerificationCache:adminVerificationCache.filter(v=>norm(v.status)===adminNidFilter);
+          if(!rows.length){list.innerHTML=`<div class="rounded-xl border border-dashed p-6 text-center text-slate-500">${labels[adminNidFilter]} ক্যাটাগরিতে কোনো আবেদন নেই।</div>`;return;}
+          const tags={pending:'bg-amber-100 text-amber-800',verified:'bg-emerald-100 text-emerald-800',rejected:'bg-red-100 text-red-800'};
+          list.innerHTML=rows.map(v=>{const st=norm(v.status);return `<div class="border rounded-xl p-3 flex flex-wrap items-center justify-between gap-3"><div><div class="flex flex-wrap items-center gap-2"><b>${adminEscape(v.nid_name||'নাম নেই')}</b><span class="rounded-full px-2.5 py-1 text-[11px] font-extrabold ${tags[st]||'bg-slate-100 text-slate-700'}">${adminEscape((st==='verified'?'APPROVED':st.toUpperCase())+' · '+(st==='verified'?'অনুমোদিত':st==='pending'?'অপেক্ষমাণ':st==='rejected'?'বাতিল':'অন্যান্য'))}</span></div><div class="text-xs text-slate-500 mt-1">${adminEscape(v.created_at||'')}</div></div><button class="px-3 py-2 rounded-lg bg-slate-900 text-white text-sm font-bold" onclick="viewAdminNid('${adminEscape(v.id)}')">বিস্তারিত দেখুন</button></div>`}).join('');
+        }
+        function setAdminNidFilter(value){adminNidFilter=value;renderAdminNidList();}
+        async function viewAdminNid(id){
+          const box=byId('admin-nid-detail');box.classList.remove('hidden');box.textContent='নিরাপদে তথ্য লোড হচ্ছে…';
+          try{
+            const d=await callAdminFunction({action:'view_verification',verification_id:id});
+            const v=d.item||{};
+            box.innerHTML=`<h3 class="text-lg font-extrabold mb-3">আবেদনের বিস্তারিত</h3>
+              <div class="grid sm:grid-cols-2 gap-2 text-sm mb-3"><div><b>নাম:</b> ${adminEscape(v.nid_name)}</div><div><b>জন্মতারিখ:</b> ${adminEscape(v.date_of_birth)}</div><div><b>ফোন:</b> ${adminEscape(v.phone||'')}</div><div><b>NID:</b> <span class="font-mono select-all">${adminEscape(v.nid_number||'Decryption unavailable')}</span></div><div><b>Status:</b> ${adminEscape(v.status)}</div></div>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">${[['Selfie',v.selfie_url],['NID Front',v.nid_front_url],['NID Back',v.nid_back_url]].map(([label,url])=>`<div><div class="font-bold text-xs mb-1">${label}</div>${url?`<a href="${adminEscape(url)}" target="_blank" rel="noopener"><img src="${adminEscape(url)}" class="w-full h-40 object-contain border rounded-lg bg-slate-50"></a>`:'ছবি পাওয়া যায়নি'}</div>`).join('')}</div>
+              <label class="block text-sm font-bold mt-4">Admin Note<textarea id="admin-nid-note" rows="2" class="w-full border rounded-lg p-2 mt-1">${adminEscape(v.admin_note||'')}</textarea></label>
+              <div class="flex gap-2 mt-3"><button onclick="reviewAdminNid('${adminEscape(id)}','verified')" class="px-4 py-2 rounded-lg bg-emerald-700 text-white font-bold">Approve</button><button onclick="reviewAdminNid('${adminEscape(id)}','rejected')" class="px-4 py-2 rounded-lg bg-red-600 text-white font-bold">Reject</button></div>`;
+          }catch(err){box.textContent='NID detail পাওয়া যায়নি: '+err.message;}
+        }
+        async function reviewAdminNid(id,status){
+          const note=byId('admin-nid-note')?.value||'';
+          if(!confirm(status==='verified'?'এই NID আবেদন Approve করবেন?':'এই NID আবেদন Reject করবেন?'))return;
+          try{await callAdminFunction({action:'review_verification',verification_id:id,status,admin_note:note});alert('NID review সংরক্ষিত হয়েছে।');byId('admin-nid-detail').classList.add('hidden');await loadAdminData();}
+          catch(err){alert('Review ব্যর্থ: '+err.message);}
+        }
+        function adminAdStatusMeta(status){
+          const map={pending:{label:'PENDING · অনুমোদনের অপেক্ষায়',short:'Pending',cls:'bg-amber-100 text-amber-800 border-amber-200'},approved:{label:'APPROVED · অনুমোদিত',short:'Approved',cls:'bg-emerald-100 text-emerald-800 border-emerald-200'},rejected:{label:'REJECTED · বাতিল',short:'Rejected',cls:'bg-red-100 text-red-800 border-red-200'},suspended:{label:'SUSPENDED · স্থগিত',short:'Suspended',cls:'bg-slate-200 text-slate-800 border-slate-300'}};
+          return map[String(status||'').toLowerCase()]||{label:'UNKNOWN · অজানা',short:'Unknown',cls:'bg-gray-100 text-gray-700 border-gray-200'};
+        }
+        function renderAdminAds(){
+          const list=byId('admin-ads-list'),filters=byId('admin-ad-filters');
+          const keys=['pending','approved','rejected','suspended','all'];
+          const labels={pending:'Pending',approved:'Approved',rejected:'Rejected',suspended:'Suspended',all:'সব বিজ্ঞাপন'};
+          filters.innerHTML=keys.map(k=>{const count=k==='all'?adminPropertyCache.length:adminPropertyCache.filter(p=>String(p.status||'').toLowerCase()===k).length;const active=adminAdFilter===k;return `<button type="button" onclick="setAdminAdFilter('${k}')" class="px-3 py-2 rounded-xl border text-sm font-extrabold ${active?'bg-slate-900 text-white border-slate-900':'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'}">${labels[k]} <span class="ml-1 inline-flex min-w-6 justify-center rounded-full px-1.5 py-0.5 text-xs ${active?'bg-white/20':'bg-slate-100 text-slate-700'}">${count}</span></button>`}).join('');
+          const items=adminAdFilter==='all'?adminPropertyCache:adminPropertyCache.filter(p=>String(p.status||'').toLowerCase()===adminAdFilter);
+          if(!items.length){list.innerHTML=`<div class="rounded-xl border border-dashed p-6 text-center text-slate-500">${labels[adminAdFilter]} ক্যাটাগরিতে কোনো বিজ্ঞাপন নেই।</div>`;return;}
+          list.innerHTML=items.map(p=>{const st=adminAdStatusMeta(p.status);return `<article class="border rounded-xl p-3 sm:p-4 bg-white"><div class="flex flex-wrap justify-between gap-3"><div class="min-w-0 flex-1"><div class="flex flex-wrap items-center gap-2"><div class="font-extrabold text-slate-900">${adminEscape(p.title||'শিরোনাম নেই')}</div><span class="inline-flex items-center rounded-full border px-2.5 py-1 text-[11px] font-extrabold ${st.cls}">${st.label}</span></div><div class="text-xs text-slate-500 mt-1">${adminEscape(p.address||'ঠিকানা নেই')} · ৳${Number(p.price||0).toLocaleString('bn-BD')}</div><div class="text-xs mt-1 text-slate-600">Owner ID: ${adminEscape(p.owner_id||'')}</div></div><div class="flex flex-wrap gap-2 items-start"><button onclick="viewAdminAd('${adminEscape(p.id)}')" class="px-3 py-2 bg-slate-900 text-white rounded-lg text-xs font-bold"><i class="fa-solid fa-eye mr-1"></i> সম্পূর্ণ বিস্তারিত</button>${p.status!=='approved'?`<button onclick="moderateAdminAd('${adminEscape(p.id)}','approved')" class="px-3 py-2 bg-emerald-700 text-white rounded-lg text-xs font-bold">Approve</button>`:''}${p.status!=='pending'?`<button onclick="moderateAdminAd('${adminEscape(p.id)}','pending')" class="px-3 py-2 bg-amber-500 text-white rounded-lg text-xs font-bold">Pending</button>`:''}${p.status!=='rejected'?`<button onclick="moderateAdminAd('${adminEscape(p.id)}','rejected')" class="px-3 py-2 bg-red-600 text-white rounded-lg text-xs font-bold">Reject</button>`:''}${p.status!=='suspended'?`<button onclick="moderateAdminAd('${adminEscape(p.id)}','suspended')" class="px-3 py-2 bg-slate-700 text-white rounded-lg text-xs font-bold">Suspend</button>`:''}</div></div><div id="admin-ad-detail-${adminEscape(p.id)}" class="hidden mt-4 border-t pt-4"></div></article>`}).join('');
+        }
+        function setAdminAdFilter(status){adminAdFilter=status;renderAdminAds();}
+        async function adminMediaUrl(bucket,path){
+          if(!path)return '';
+          try{const {data,error}=await toletSupabase.storage.from(bucket).createSignedUrl(path,3600);if(!error&&data?.signedUrl)return data.signedUrl;}catch(e){}
+          try{return toletSupabase.storage.from(bucket).getPublicUrl(path).data.publicUrl||'';}catch(e){return '';}
+        }
+        async function viewAdminAd(id){
+          const box=byId('admin-ad-detail-'+id);if(!box)return;
+          box.classList.remove('hidden');box.innerHTML='<div class="py-5 text-sm text-slate-500"><i class="fa-solid fa-spinner fa-spin mr-2"></i>বিজ্ঞাপনের সব তথ্য, ছবি ও ভিডিও লোড হচ্ছে…</div>';
+          try{
+            const cached=adminPropertyCache.find(x=>String(x.id)===String(id))||{};
+            const [{data:property,error:propertyError},{data:media,error:mediaError},{data:owner,error:ownerError}]=await Promise.all([
+              toletSupabase.from('properties').select('*').eq('id',id).maybeSingle(),
+              toletSupabase.from('property_media').select('media_type,storage_path,sort_order').eq('property_id',id).order('sort_order',{ascending:true}),
+              toletSupabase.from('profiles').select('full_name,phone,verification_status,role').eq('id',cached.owner_id).maybeSingle()
+            ]);
+            if(propertyError)throw propertyError;
+            const p=property||cached;
+            const mediaRows=mediaError?[]:(media||[]);
+            const images=await Promise.all(mediaRows.filter(m=>m.media_type==='image').map(m=>adminMediaUrl('property-images',m.storage_path)));
+            const videos=await Promise.all(mediaRows.filter(m=>m.media_type==='video').map(m=>adminMediaUrl('property-videos',m.storage_path)));
+            const cleanImages=images.filter(Boolean),cleanVideos=videos.filter(Boolean);
+            const ownerName=p.owner_display_name||owner?.full_name||'তথ্য নেই';
+            const ownerPhone=p.owner_contact_phone||owner?.phone||'তথ্য নেই';
+            const coords=(p.latitude!=null&&p.longitude!=null)?`${p.latitude}, ${p.longitude}`:'লোকেশন দেওয়া হয়নি';
+            const mapLink=(p.latitude!=null&&p.longitude!=null)?`https://www.openstreetmap.org/?mlat=${encodeURIComponent(p.latitude)}&mlon=${encodeURIComponent(p.longitude)}#map=17/${encodeURIComponent(p.latitude)}/${encodeURIComponent(p.longitude)}`:'';
+            box.innerHTML=`<div class="flex items-center justify-between gap-2 mb-3"><h3 class="text-lg font-extrabold">বিজ্ঞাপনের সম্পূর্ণ তথ্য</h3><button onclick="this.closest('[id^=admin-ad-detail]').classList.add('hidden')" class="text-sm font-bold text-slate-500">বন্ধ করুন ✕</button></div>
+              <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+                <div class="rounded-lg bg-slate-50 p-3"><span class="text-xs text-slate-500">শিরোনাম</span><div class="font-bold">${adminEscape(p.title||'')}</div></div>
+                <div class="rounded-lg bg-slate-50 p-3"><span class="text-xs text-slate-500">ক্যাটাগরি</span><div class="font-bold">${adminEscape(p.category||'')}</div></div>
+                <div class="rounded-lg bg-slate-50 p-3"><span class="text-xs text-slate-500">ভাড়া</span><div class="font-bold">৳ ${Number(p.price||0).toLocaleString('bn-BD')}</div></div>
+                <div class="rounded-lg bg-slate-50 p-3"><span class="text-xs text-slate-500">বিভাগ / জেলা / উপজেলা</span><div class="font-bold">${adminEscape([p.division,p.district,p.upazila,p.area].filter(Boolean).join(' / ')||p.address||'')}</div></div>
+                <div class="rounded-lg bg-slate-50 p-3 sm:col-span-2"><span class="text-xs text-slate-500">সম্পূর্ণ ঠিকানা</span><div class="font-bold">${adminEscape(p.address||'')}</div></div>
+                <div class="rounded-lg bg-slate-50 p-3"><span class="text-xs text-slate-500">বেডরুম / বাথরুম</span><div class="font-bold">${adminEscape(p.bedrooms??'—')} / ${adminEscape(p.bathrooms??'—')}</div></div>
+                <div class="rounded-lg bg-slate-50 p-3"><span class="text-xs text-slate-500">ভাড়াটিয়ার ধরন</span><div class="font-bold">${adminEscape(p.rent_gender||'')}</div></div>
+                <div class="rounded-lg bg-slate-50 p-3"><span class="text-xs text-slate-500">পাওয়া যাবে</span><div class="font-bold">${adminEscape(p.available_from||'উল্লেখ নেই')}</div></div>
+                <div class="rounded-lg bg-slate-50 p-3"><span class="text-xs text-slate-500">বিজ্ঞাপন Status</span><div class="font-bold">${adminEscape(p.status||'')}</div></div>
+              </div>
+              <div class="mt-3 rounded-xl border p-3"><h4 class="font-extrabold mb-2">বিজ্ঞাপনের বিস্তারিত বিবরণ</h4><p class="text-sm whitespace-pre-wrap text-slate-700">${adminEscape(p.description||'বিবরণ দেওয়া হয়নি')}</p></div>
+              <div class="mt-3 rounded-xl border p-3"><h4 class="font-extrabold mb-2">মালিকের তথ্য</h4><div class="grid sm:grid-cols-2 gap-2 text-sm"><div>নাম: <b>${adminEscape(ownerName)}</b></div><div>ফোন: <b>${adminEscape(ownerPhone)}</b></div><div>Owner ID: <span class="font-mono text-xs">${adminEscape(p.owner_id||'')}</span></div><div>NID Status: <b>${adminEscape(owner?.verification_status||'তথ্য পাওয়া যায়নি')}</b></div></div>${ownerError?`<p class="text-xs text-amber-700 mt-2">Owner profile detail: ${adminEscape(ownerError.message)}</p>`:''}</div>
+              <div class="mt-3"><h4 class="font-extrabold mb-2">বাসার ছবি (${cleanImages.length})</h4>${cleanImages.length?`<div class="grid grid-cols-2 sm:grid-cols-3 gap-2">${cleanImages.map((u,i)=>`<a href="${adminEscape(u)}" target="_blank" rel="noopener"><img src="${adminEscape(u)}" alt="Property photo ${i+1}" class="w-full h-36 sm:h-44 object-cover rounded-lg border"></a>`).join('')}</div>`:'<p class="text-sm text-slate-500">ছবি পাওয়া যায়নি।'+(mediaError?' Media table: '+adminEscape(mediaError.message):'')+'</p>'}</div>
+              <div class="mt-3"><h4 class="font-extrabold mb-2">বাসার ভিডিও (${cleanVideos.length})</h4>${cleanVideos.length?`<div class="grid sm:grid-cols-2 gap-3">${cleanVideos.map(u=>`<video src="${adminEscape(u)}" controls playsinline preload="metadata" class="w-full rounded-lg bg-black max-h-72"></video>`).join('')}</div>`:'<p class="text-sm text-slate-500">ভিডিও সংযুক্ত করা হয়নি বা লোড করা যায়নি।</p>'}</div>
+              <div class="mt-3 rounded-lg bg-slate-50 p-3 text-sm">ম্যাপ: ${adminEscape(coords)} ${mapLink?`· <a class="text-emerald-700 font-bold underline" href="${adminEscape(mapLink)}" target="_blank" rel="noopener">ম্যাপে খুলুন</a>`:''}</div>
+              <div class="flex flex-wrap gap-2 mt-4"><button onclick="moderateAdminAd('${adminEscape(id)}','approved')" class="px-4 py-2 rounded-lg bg-emerald-700 text-white font-bold">Approve</button><button onclick="moderateAdminAd('${adminEscape(id)}','rejected')" class="px-4 py-2 rounded-lg bg-red-600 text-white font-bold">Reject</button><button onclick="moderateAdminAd('${adminEscape(id)}','suspended')" class="px-4 py-2 rounded-lg bg-slate-700 text-white font-bold">Suspend</button></div>`;
+          }catch(err){box.innerHTML=`<div class="rounded-lg bg-red-50 text-red-700 p-3 text-sm">বিস্তারিত লোড করা যায়নি: ${adminEscape(err.message||err)}<br><span class="text-xs">Admin-এর properties ও property_media SELECT permission পরীক্ষা করুন।</span></div>`;}
+        }
+        async function moderateAdminAd(id,status){
+          const p=adminPropertyCache.find(x=>String(x.id)===String(id));if(!p)return;
+          if(status==='approved'){
+            const {data:owner,error}=await toletSupabase.from('profiles').select('verification_status').eq('id',p.owner_id).single();
+            if(error||owner?.verification_status!=='verified'){alert('এই মালিকের NID Verification verified নয়। বিজ্ঞাপন Approve করা যাবে না।');return;}
+          }
+          if(!confirm('বিজ্ঞাপনের status '+status+' করবেন?'))return;
+          const {error}=await toletSupabase.from('properties').update({status}).eq('id',id);
+          if(error){alert('আপডেট ব্যর্থ: '+error.message);return;}await loadAdminData();
+        }
+        async function loadAdminSettings(){
+          const {data,error}=await toletSupabase.from('site_settings').select('key,value');
+          if(error){console.warn(error);return;}const cfg=Object.fromEntries((data||[]).map(x=>[x.key,x.value]));
+          const map={about:'set-about',email:'set-email',phone:'set-phone',address:'set-address',hours:'set-hours',facebook:'set-facebook',copyright:'set-copyright'};
+          Object.entries(map).forEach(([k,id])=>{if(byId(id))byId(id).value=cfg[k]||'';});
+        }
+        async function saveAdminSettings(e){
+          e.preventDefault();if(!toletAdminProfile)return;
+          const values={about:'set-about',email:'set-email',phone:'set-phone',address:'set-address',hours:'set-hours',facebook:'set-facebook',copyright:'set-copyright'};
+          const rows=Object.entries(values).map(([key,id])=>({key,value:byId(id).value.trim()}));
+          const {error}=await toletSupabase.from('site_settings').upsert(rows,{onConflict:'key'});
+          if(error){alert('সেটিংস সংরক্ষণ হয়নি: '+error.message);return;}
+          await applyContactSettings();alert('সেটিংস সংরক্ষিত হয়েছে।');
+        }
+        // Account modal reveals the admin shortcut only after an authenticated role check.
+        const _renderAccountDashboard=renderAccountDashboard;
+        renderAccountDashboard=function(){
+          _renderAccountDashboard();
+          const b=byId('account-admin-entry');if(!b)return;
+          b.classList.add('hidden');
+          const user=window.toletOwnerSession?.user;if(!user||!window.toletSupabase)return;
+          toletSupabase.from('profiles').select('role').eq('id',user.id).single().then(({data,error})=>{
+            if(!error&&data?.role==='admin'){toletAdminProfile={role:'admin',user};b.classList.remove('hidden');}
+          });
+        };
+
+
+        // Admin dashboard restored: access is gated by profiles.role === admin.
+
+    </script>
+</body>
+</html>
