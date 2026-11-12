@@ -61,3 +61,6 @@ cd android
 5. ZIP extract করলে `app-debug.apk` পাবে। Android ফোনে ফাইলটি পাঠিয়ে install করো। প্রয়োজন হলে Android Settings-এ ওই উৎস থেকে app install করার অনুমতি দাও।
 
 প্রতিবার `main` বা `master` branch-এ push করলেও workflow স্বয়ংক্রিয়ভাবে চলবে। এটি debug APK; Play Store release-এর জন্য আলাদা signed release build দরকার। GitHub Actions build-এর জন্য এই workflow-তে Android Studio বা তোমার কম্পিউটারে Node.js ইনস্টল করতে হয় না।
+
+## Premium Upgrade (এই সংস্করণ)
+এই সংস্করণে Premium Emerald UI refinement, persistent on-device Favourite list, property share action, 5-item mobile navigation এবং Android Back handling যুক্ত হয়েছে। বিস্তারিত সীমাবদ্ধতা ও পরবর্তী Firebase/Supabase setup: `docs/PREMIUM_UPGRADE_BN.md`। Push notification ও secure in-app chat চালু করতে আলাদা Firebase/Supabase backend configuration আবশ্যক।
